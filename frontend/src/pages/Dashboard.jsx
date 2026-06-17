@@ -6,18 +6,19 @@ function Dashboard() {
   const [result, setResult] = useState("");
 
   const handleSearch = async () => {
+    if (!query.trim()) return;
+
     try {
       const response = await axios.get(
-        "https://ai-powered-questionbank-assistant.onrender.com/api/questions/search",
-        {
-          params: { query }
-        }
+        `https://ai-powered-questionbank-assistant.onrender.com/api/questions/search?query=${encodeURIComponent(
+          query
+        )}`
       );
 
       if (response.data.answer) {
         setResult(response.data.answer);
       } else {
-        setResult("No answer found.");
+        setResult(JSON.stringify(response.data));
       }
     } catch (error) {
       console.error(error);
@@ -25,18 +26,24 @@ function Dashboard() {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   return (
     <div className="dashboard">
       <div className="search-card">
-
         <h1>AI Question Bank Assistant</h1>
 
         <div className="search-box">
           <input
             type="text"
+            placeholder="Ask anything..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Ask anything..."
+            onKeyDown={handleKeyDown}
           />
 
           <button onClick={handleSearch}>
@@ -50,7 +57,6 @@ function Dashboard() {
             <p>{result}</p>
           </div>
         )}
-
       </div>
     </div>
   );
