@@ -9,7 +9,7 @@ function AddQuestion() {
   const saveQuestion = async () => {
     try {
       await axios.post(
-  "http://localhost:5199/api/questions",
+  "https://ai-powered-questionbank-assistant.onrender.com/api/questions",
   {
     questionText: questionText,
     answerText: answer,

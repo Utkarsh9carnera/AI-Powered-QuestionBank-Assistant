@@ -10,7 +10,7 @@ function ViewQuestions() {
 
   const loadQuestions = async () => {
     const res = await axios.get(
-      "http://localhost:5199/api/questions"
+      "https://ai-powered-questionbank-assistant.onrender.com/api/questions"
     );
 
     setQuestions(res.data);

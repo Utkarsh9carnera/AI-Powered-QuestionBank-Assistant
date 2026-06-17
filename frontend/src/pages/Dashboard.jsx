@@ -18,7 +18,7 @@ function Dashboard() {
       setLoading(true);
 
       const response = await axios.post(
-        "http://localhost:5199/api/ai/ask",
+        "https://ai-powered-questionbank-assistant.onrender.com/api/questions",
         {
           question: question,
         }
