@@ -25,18 +25,42 @@ namespace QuestionBankAssistant.Controllers
         [HttpGet]
         public async Task<IActionResult> GetQuestions()
         {
-            var questions =
-                await _context.Questions.ToListAsync();
-
+            var questions = await _context.Questions.ToListAsync();
             return Ok(questions);
         }
 
+        // SEARCH QUESTION
+        [HttpGet("search")]
+        public async Task<IActionResult> Search(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+                return BadRequest("Query is required");
+
+            var question = await _context.Questions
+                .FirstOrDefaultAsync(q =>
+                    q.QuestionText.ToLower().Contains(query.ToLower()));
+
+            if (question == null)
+            {
+                return Ok(new
+                {
+                    answer = "No matching question found."
+                });
+            }
+
+            return Ok(new
+            {
+                question = question.QuestionText,
+                answer = question.AnswerText,
+                category = question.Category
+            });
+        }
+
         // GET QUESTION BY ID
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetQuestion(int id)
         {
-            var question =
-                await _context.Questions.FindAsync(id);
+            var question = await _context.Questions.FindAsync(id);
 
             if (question == null)
                 return NotFound();
@@ -44,43 +68,12 @@ namespace QuestionBankAssistant.Controllers
             return Ok(question);
         }
 
-        // ADD QUESTION + EMBEDDING
+        // ADD QUESTION
         [HttpPost]
-        public async Task<IActionResult> AddQuestion(
-            [FromBody] Question question)
+        public async Task<IActionResult> AddQuestion([FromBody] Question question)
         {
             _context.Questions.Add(question);
             await _context.SaveChangesAsync();
-
-            try
-            {
-                var vector =
-                    await _embeddingService
-                    .GenerateEmbedding(
-                        question.QuestionText
-                    );
-
-                var embedding =
-                    new QuestionEmbedding
-                    {
-                        QuestionId =
-                            question.QuestionId,
-
-                        VectorData =
-                            string.Join(",", vector)
-                    };
-
-                _context.QuestionEmbeddings
-                    .Add(embedding);
-
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(
-                    $"Embedding Error: {ex.Message}"
-                );
-            }
 
             return Ok(question);
         }
@@ -91,20 +84,14 @@ namespace QuestionBankAssistant.Controllers
             int id,
             [FromBody] Question updatedQuestion)
         {
-            var question =
-                await _context.Questions.FindAsync(id);
+            var question = await _context.Questions.FindAsync(id);
 
             if (question == null)
                 return NotFound();
 
-            question.QuestionText =
-                updatedQuestion.QuestionText;
-
-            question.AnswerText =
-                updatedQuestion.AnswerText;
-
-            question.Category =
-                updatedQuestion.Category;
+            question.QuestionText = updatedQuestion.QuestionText;
+            question.AnswerText = updatedQuestion.AnswerText;
+            question.Category = updatedQuestion.Category;
 
             await _context.SaveChangesAsync();
 
@@ -113,29 +100,14 @@ namespace QuestionBankAssistant.Controllers
 
         // DELETE QUESTION
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteQuestion(
-            int id)
+        public async Task<IActionResult> DeleteQuestion(int id)
         {
-            var question =
-                await _context.Questions.FindAsync(id);
+            var question = await _context.Questions.FindAsync(id);
 
             if (question == null)
                 return NotFound();
 
-            var embedding =
-                await _context.QuestionEmbeddings
-                .FirstOrDefaultAsync(
-                    e => e.QuestionId == id
-                );
-
-            if (embedding != null)
-            {
-                _context.QuestionEmbeddings
-                    .Remove(embedding);
-            }
-
             _context.Questions.Remove(question);
-
             await _context.SaveChangesAsync();
 
             return Ok();
