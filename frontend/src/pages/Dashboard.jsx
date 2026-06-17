@@ -25,29 +25,7 @@ function Dashboard() {
     }
   };
 
-  return (
-    <div className="dashboard-container">
-      <h1>AI Question Bank Assistant</h1>
-
-      <input
-        type="text"
-        placeholder="Ask anything..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
-
-      <button onClick={handleSearch}>
-        {loading ? "Searching..." : "Search"}
-      </button>
-
-      {answer && (
-        <div style={{ marginTop: "20px" }}>
-          <h3>Answer:</h3>
-          <p>{answer}</p>
-        </div>
-      )}
-    </div>
-  );
+  
 }
 
 export default Dashboard;
