@@ -6,7 +6,7 @@ function AddQuestion() {
   const [answerText, setAnswerText] = useState("");
   const [category, setCategory] = useState("");
 
-  const handleSubmit = async (e) => {
+  const saveQuestion = async (e) => {
     e.preventDefault();
 
     try {
@@ -15,7 +15,7 @@ function AddQuestion() {
         {
           questionText,
           answerText,
-          category,
+          category
         }
       );
 
@@ -26,28 +26,37 @@ function AddQuestion() {
       setCategory("");
     } catch (error) {
       console.error(error);
-      alert("Error adding question");
+      alert("Failed to add question");
     }
   };
 
   return (
-    <div className="form-page">
-      <div className="form-card">
+    <div className="add-container">
+      <div className="add-card">
+
         <h1>Add Question</h1>
 
-        <form onSubmit={handleSubmit}>
+        <form
+          className="add-form"
+          onSubmit={saveQuestion}
+        >
+
           <input
             type="text"
             placeholder="Enter Question"
             value={questionText}
-            onChange={(e) => setQuestionText(e.target.value)}
+            onChange={(e) =>
+              setQuestionText(e.target.value)
+            }
             required
           />
 
           <textarea
             placeholder="Enter Answer"
             value={answerText}
-            onChange={(e) => setAnswerText(e.target.value)}
+            onChange={(e) =>
+              setAnswerText(e.target.value)
+            }
             required
           />
 
@@ -55,14 +64,21 @@ function AddQuestion() {
             type="text"
             placeholder="Enter Category"
             value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            onChange={(e) =>
+              setCategory(e.target.value)
+            }
             required
           />
 
-          <button type="submit">
+          <button
+            type="submit"
+            className="add-btn"
+          >
             Save Question
           </button>
+
         </form>
+
       </div>
     </div>
   );

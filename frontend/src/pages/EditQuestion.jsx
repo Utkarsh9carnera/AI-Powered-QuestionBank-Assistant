@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 function EditQuestion() {
@@ -28,7 +28,9 @@ function EditQuestion() {
     }
   };
 
-  const updateQuestion = async () => {
+  const updateQuestion = async (e) => {
+    e.preventDefault();
+
     try {
       await axios.put(
         `https://ai-powered-questionbank-assistant.onrender.com/api/questions/${id}`,
@@ -39,6 +41,7 @@ function EditQuestion() {
         }
       );
 
+      alert("Question Updated");
       navigate("/view");
     } catch (error) {
       console.error(error);
@@ -53,7 +56,10 @@ function EditQuestion() {
           Edit Question
         </h1>
 
-        <div className="edit-form">
+        <form
+          className="edit-form"
+          onSubmit={updateQuestion}
+        >
 
           <input
             type="text"
@@ -82,13 +88,13 @@ function EditQuestion() {
           />
 
           <button
+            type="submit"
             className="update-btn"
-            onClick={updateQuestion}
           >
             Update Question
           </button>
 
-        </div>
+        </form>
 
       </div>
     </div>
