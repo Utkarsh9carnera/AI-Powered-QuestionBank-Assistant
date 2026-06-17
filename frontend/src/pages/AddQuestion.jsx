@@ -3,63 +3,67 @@ import axios from "axios";
 
 function AddQuestion() {
   const [questionText, setQuestionText] = useState("");
-  const [answer, setAnswer] = useState("");
+  const [answerText, setAnswerText] = useState("");
   const [category, setCategory] = useState("");
 
-  const saveQuestion = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     try {
       await axios.post(
-  "https://ai-powered-questionbank-assistant.onrender.com/api/questions",
-  {
-    questionText: questionText,
-    answerText: answer,
-    category: category
-  }
-);
+        "https://ai-powered-questionbank-assistant.onrender.com/api/questions",
+        {
+          questionText,
+          answerText,
+          category,
+        }
+      );
 
-      alert("Question Saved");
+      alert("Question Added Successfully");
 
       setQuestionText("");
-      setAnswer("");
+      setAnswerText("");
       setCategory("");
-    } catch {
-      alert("Failed to save question");
+    } catch (error) {
+      console.error(error);
+      alert("Error adding question");
     }
   };
 
   return (
-    <div className="form-container">
-      <h2>Add Question</h2>
+    <div className="form-page">
+      <div className="form-card">
+        <h1>Add Question</h1>
 
-      <input
-        type="text"
-        placeholder="Enter Question"
-        value={questionText}
-        onChange={(e) =>
-          setQuestionText(e.target.value)
-        }
-      />
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Enter Question"
+            value={questionText}
+            onChange={(e) => setQuestionText(e.target.value)}
+            required
+          />
 
-      <textarea
-        placeholder="Enter Answer"
-        value={answer}
-        onChange={(e) =>
-          setAnswer(e.target.value)
-        }
-      />
+          <textarea
+            placeholder="Enter Answer"
+            value={answerText}
+            onChange={(e) => setAnswerText(e.target.value)}
+            required
+          />
 
-      <input
-        type="text"
-        placeholder="Enter Category"
-        value={category}
-        onChange={(e) =>
-          setCategory(e.target.value)
-        }
-      />
+          <input
+            type="text"
+            placeholder="Enter Category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            required
+          />
 
-      <button onClick={saveQuestion}>
-        Save Question
-      </button>
+          <button type="submit">
+            Save Question
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

@@ -1,73 +1,265 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
+
+body{
+  background:linear-gradient(
+    90deg,
+    #020b2e,
+    #03104a,
+    #020b2e
+  );
+  color:white;
+  min-height:100vh;
+}
+
+/* NAVBAR */
+
+.navbar{
+  display:flex;
+  justify-content:center;
+  gap:50px;
+  padding:25px;
+}
+
+.navbar a{
+  color:white;
+  text-decoration:none;
+  font-size:30px;
+  font-weight:600;
+  transition:.3s;
+}
+
+.navbar a:hover{
+  color:#b96cff;
+}
+
+/* DASHBOARD */
+
 .dashboard{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:#020b2e;
-    padding:30px;
+  display:flex;
+  justify-content:center;
+  padding:40px 20px;
 }
 
 .search-card{
-    width:100%;
-    max-width:1000px;
-    background:#101936;
-    padding:40px;
-    border-radius:25px;
-    box-shadow:0 0 40px rgba(0,0,0,.4);
+  width:100%;
+  max-width:1200px;
+  background:#121d42;
+  border-radius:30px;
+  padding:50px;
+  box-shadow:0 0 40px rgba(0,0,0,.3);
 }
 
 .search-card h1{
-    text-align:center;
-    color:white;
-    font-size:60px;
-    margin-bottom:40px;
+  text-align:center;
+  font-size:70px;
+  margin-bottom:40px;
 }
 
 .search-box{
-    display:flex;
-    gap:15px;
+  display:flex;
+  gap:20px;
 }
 
 .search-box input{
-    flex:1;
-    height:65px;
-    border:none;
-    border-radius:15px;
-    padding:0 20px;
-    font-size:22px;
-    background:#1f2a44;
-    color:white;
+  flex:1;
+  height:70px;
+  border:none;
+  border-radius:18px;
+  padding:0 25px;
+  font-size:28px;
+  background:#243055;
+  color:white;
+}
+
+.search-box input:focus{
+  outline:none;
 }
 
 .search-box button{
-    width:180px;
-    border:none;
-    border-radius:15px;
-    font-size:22px;
-    font-weight:700;
-    cursor:pointer;
-    background:linear-gradient(
-        135deg,
-        #7b2ff7,
-        #c738ff
-    );
-    color:white;
+  width:220px;
+  border:none;
+  border-radius:18px;
+  font-size:28px;
+  font-weight:bold;
+  cursor:pointer;
+  color:white;
+  background:linear-gradient(
+    135deg,
+    #7b2ff7,
+    #d24cff
+  );
 }
 
 .answer-box{
-    margin-top:30px;
-    padding:25px;
-    border-radius:15px;
-    background:#1f2a44;
+  margin-top:35px;
+  background:#243055;
+  border-radius:20px;
+  padding:30px;
+  text-align:center;
 }
 
 .answer-box h2{
-    color:white;
-    margin-bottom:10px;
+  margin-bottom:20px;
+  font-size:35px;
 }
 
 .answer-box p{
-    color:white;
+  font-size:28px;
+  line-height:1.6;
+}
+
+/* ADD QUESTION */
+
+.form-page{
+  display:flex;
+  justify-content:center;
+  padding:40px 20px;
+}
+
+.form-card{
+  width:100%;
+  max-width:900px;
+  background:#121d42;
+  padding:40px;
+  border-radius:25px;
+}
+
+.form-card h1{
+  text-align:center;
+  margin-bottom:30px;
+  font-size:50px;
+}
+
+.form-card input,
+.form-card textarea{
+  width:100%;
+  margin-bottom:20px;
+  border:none;
+  border-radius:15px;
+  background:#243055;
+  color:white;
+  padding:18px;
+  font-size:22px;
+}
+
+.form-card textarea{
+  min-height:180px;
+  resize:none;
+}
+
+.form-card button{
+  width:100%;
+  height:65px;
+  border:none;
+  border-radius:15px;
+  background:linear-gradient(
+    135deg,
+    #7b2ff7,
+    #d24cff
+  );
+  color:white;
+  font-size:24px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+/* VIEW QUESTIONS */
+
+.table-page{
+  padding:40px 20px;
+}
+
+.table-page h1{
+  text-align:center;
+  margin-bottom:30px;
+  font-size:50px;
+}
+
+.table-container{
+  max-width:1200px;
+  margin:auto;
+  overflow:hidden;
+  border-radius:20px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th{
+  background:linear-gradient(
+    135deg,
+    #7b2ff7,
+    #d24cff
+  );
+  color:white;
+  padding:20px;
+  font-size:24px;
+}
+
+td{
+  background:#182446;
+  color:white;
+  padding:20px;
+  text-align:center;
+  font-size:20px;
+}
+
+tr:nth-child(even) td{
+  background:#202d54;
+}
+
+/* BUTTONS */
+
+.edit-btn{
+  background:#22c55e;
+  color:white;
+  border:none;
+  padding:10px 20px;
+  border-radius:10px;
+  cursor:pointer;
+  margin-right:10px;
+  font-size:18px;
+}
+
+.delete-btn{
+  background:#ef4444;
+  color:white;
+  border:none;
+  padding:10px 20px;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:18px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+  .navbar{
+    gap:20px;
+    flex-wrap:wrap;
+  }
+
+  .navbar a{
     font-size:22px;
-    line-height:1.6;
+  }
+
+  .search-card h1{
+    font-size:40px;
+  }
+
+  .search-box{
+    flex-direction:column;
+  }
+
+  .search-box button{
+    width:100%;
+  }
 }
