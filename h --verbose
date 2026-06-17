@@ -1,0 +1,11 @@
+[33m02018f8[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Remove API key
+[33m3fdcf9b[m Remove API key
+[33mcd79c04[m Completed AI Question Bank Assistant with RAG
+[33mf74ee6c[m[33m ([m[1;31morigin/main[m[33m)[m Set AI page as homepage
+[33mf76790e[m Add database migration on startup
+[33maf36051[m Fix EF Core packages
+[33m08237e1[m Changed target framework to net8.0
+[33m23abb06[m Added Dockerfile
+[33m2d62650[m Replaced Gemini with Groq
+[33mc696dd6[m Added AI search, embeddings, vector similarity and PDF upload
+[33m4564480[m Initial project setup with EF Core, SQLite and database migration

@@ -1,0 +1,35 @@
+[33mcommit 02018f85a698ccc7524ac8b4a3a0592091f6c0b9[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: LAPTOP-KKJ37PKS\Utkarsh Tripathi <utkarshtripathi616@gmail.com>
+Date:   Wed Jun 17 20:56:57 2026 +0530
+
+    Remove API key
+
+[33mcommit 3fdcf9b4490bce327b9183ba2649f4069e5b60f6[m
+Author: LAPTOP-KKJ37PKS\Utkarsh Tripathi <utkarshtripathi616@gmail.com>
+Date:   Wed Jun 17 20:55:05 2026 +0530
+
+    Remove API key
+
+[33mcommit cd79c0425909cda30600b2beae48568aff6ae078[m
+Author: LAPTOP-KKJ37PKS\Utkarsh Tripathi <utkarshtripathi616@gmail.com>
+Date:   Wed Jun 17 20:49:48 2026 +0530
+
+    Completed AI Question Bank Assistant with RAG
+
+[33mcommit 2d626502d052c788f6701ce7b1b66de999164443[m
+Author: LAPTOP-KKJ37PKS\Utkarsh Tripathi <utkarshtripathi616@gmail.com>
+Date:   Wed Jun 17 15:57:04 2026 +0530
+
+    Replaced Gemini with Groq
+
+[33mcommit c696dd6a4ce5a18b01504231958853b704412f69[m
+Author: LAPTOP-KKJ37PKS\Utkarsh Tripathi <utkarshtripathi616@gmail.com>
+Date:   Mon Jun 15 21:18:04 2026 +0530
+
+    Added AI search, embeddings, vector similarity and PDF upload
+
+[33mcommit 4564480422490bc104428a56c4b5f987f8c60a8d[m
+Author: LAPTOP-KKJ37PKS\Utkarsh Tripathi <utkarshtripathi616@gmail.com>
+Date:   Fri Jun 12 11:37:26 2026 +0530
+
+    Initial project setup with EF Core, SQLite and database migration

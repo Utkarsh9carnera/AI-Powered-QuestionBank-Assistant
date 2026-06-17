@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuestionBankAssistant.data;
 
@@ -10,9 +11,11 @@ using QuestionBankAssistant.data;
 namespace QuestionBankAssistant.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260615074243_AddEmbeddings")]
+    partial class AddEmbeddings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.9");
@@ -41,37 +44,6 @@ namespace QuestionBankAssistant.Migrations
                     b.HasKey("QuestionId");
 
                     b.ToTable("Questions");
-                });
-
-            modelBuilder.Entity("QuestionBankAssistant.Models.QuestionEmbedding", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("VectorData")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("QuestionEmbeddings");
-                });
-
-            modelBuilder.Entity("QuestionBankAssistant.Models.QuestionEmbedding", b =>
-                {
-                    b.HasOne("QuestionBankAssistant.Models.Question", "Question")
-                        .WithMany()
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Question");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,17 @@
+@model QuestionBankAssistant.Models.Question
+
+<h1>Delete Question</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+
+<div>
+    <p><strong>Question:</strong> @Model.QuestionText</p>
+    <p><strong>Answer:</strong> @Model.AnswerText</p>
+    <p><strong>Category:</strong> @Model.Category</p>
+</div>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="QuestionId" />
+    <button type="submit">Delete</button>
+    <a asp-action="Index">Cancel</a>
+</form>

@@ -1,0 +1,31 @@
+@model QuestionBankAssistant.Models.Question
+
+@{
+    ViewData["Title"] = "AI Question Assistant";
+}
+
+<h1>AI Question Assistant</h1>
+
+<form method="get">
+    <input type="text"
+           name="query"
+           placeholder="Ask your question..."
+           style="width:400px;" />
+
+    <button type="submit">
+        Ask AI
+    </button>
+</form>
+
+@if (Model != null)
+{
+    <hr />
+
+    <h2>Answer</h2>
+
+    <p>@Model.AnswerText</p>
+
+    <br />
+
+    <strong>Category:</strong> @Model.Category
+}

@@ -1,0 +1,26 @@
+@model QuestionBankAssistant.Models.Question
+
+@if (Model != null)
+{
+    <h2>Practice Mode</h2>
+
+    <h3>@Model.QuestionText</h3>
+
+    <button onclick="document.getElementById('answer').style.display='block'">
+        Show Answer
+    </button>
+
+    <div id="answer" style="display:none; margin-top:20px;">
+        <h4>@Model.AnswerText</h4>
+    </div>
+
+    <br />
+
+    <a asp-controller="Practice" asp-action="Index">
+        Next Question
+    </a>
+}
+else
+{
+    <h3>No questions found in database.</h3>
+}

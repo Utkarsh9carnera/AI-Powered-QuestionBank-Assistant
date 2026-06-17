@@ -1,0 +1,24 @@
+@model QuestionBankAssistant.Models.Question
+
+<h1>Create Question</h1>
+
+<form asp-action="Create">
+
+    <div>
+        <label asp-for="QuestionText"></label>
+        <input asp-for="QuestionText" />
+    </div>
+
+    <div>
+        <label asp-for="AnswerText"></label>
+        <input asp-for="AnswerText" />
+    </div>
+
+    <div>
+        <label asp-for="Category"></label>
+        <input asp-for="Category" />
+    </div>
+
+    <button type="submit">Save</button>
+
+</form>

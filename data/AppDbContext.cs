@@ -11,5 +11,7 @@ namespace QuestionBankAssistant.data
         }
 
         public DbSet<Question> Questions { get; set; }
+
+        public DbSet<QuestionEmbedding> QuestionEmbeddings { get; set; }
     }
 }
