@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QuestionBankAssistant.data;
 using QuestionBankAssistant.Models;
-using QuestionBankAssistant.Services;
 
 namespace QuestionBankAssistant.Controllers
 {
@@ -11,14 +10,10 @@ namespace QuestionBankAssistant.Controllers
     public class QuestionsController : ControllerBase
     {
         private readonly AppDbContext _context;
-        private readonly EmbeddingService _embeddingService;
 
-        public QuestionsController(
-            AppDbContext context,
-            EmbeddingService embeddingService)
+        public QuestionsController(AppDbContext context)
         {
             _context = context;
-            _embeddingService = embeddingService;
         }
 
         // GET ALL QUESTIONS
@@ -38,7 +33,8 @@ namespace QuestionBankAssistant.Controllers
 
             var question = await _context.Questions
                 .FirstOrDefaultAsync(q =>
-                    q.QuestionText.ToLower().Contains(query.ToLower()));
+                    q.QuestionText.ToLower()
+                    .Contains(query.ToLower()));
 
             if (question == null)
             {
@@ -60,7 +56,8 @@ namespace QuestionBankAssistant.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetQuestion(int id)
         {
-            var question = await _context.Questions.FindAsync(id);
+            var question =
+                await _context.Questions.FindAsync(id);
 
             if (question == null)
                 return NotFound();
@@ -70,9 +67,11 @@ namespace QuestionBankAssistant.Controllers
 
         // ADD QUESTION
         [HttpPost]
-        public async Task<IActionResult> AddQuestion([FromBody] Question question)
+        public async Task<IActionResult> AddQuestion(
+            [FromBody] Question question)
         {
             _context.Questions.Add(question);
+
             await _context.SaveChangesAsync();
 
             return Ok(question);
@@ -84,14 +83,20 @@ namespace QuestionBankAssistant.Controllers
             int id,
             [FromBody] Question updatedQuestion)
         {
-            var question = await _context.Questions.FindAsync(id);
+            var question =
+                await _context.Questions.FindAsync(id);
 
             if (question == null)
                 return NotFound();
 
-            question.QuestionText = updatedQuestion.QuestionText;
-            question.AnswerText = updatedQuestion.AnswerText;
-            question.Category = updatedQuestion.Category;
+            question.QuestionText =
+                updatedQuestion.QuestionText;
+
+            question.AnswerText =
+                updatedQuestion.AnswerText;
+
+            question.Category =
+                updatedQuestion.Category;
 
             await _context.SaveChangesAsync();
 
@@ -100,17 +105,55 @@ namespace QuestionBankAssistant.Controllers
 
         // DELETE QUESTION
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteQuestion(int id)
+        public async Task<IActionResult> DeleteQuestion(
+            int id)
         {
-            var question = await _context.Questions.FindAsync(id);
+            try
+            {
+                var question =
+                    await _context.Questions
+                    .FirstOrDefaultAsync(
+                        q => q.QuestionId == id);
 
-            if (question == null)
-                return NotFound();
+                if (question == null)
+                {
+                    return NotFound(new
+                    {
+                        message =
+                            "Question not found"
+                    });
+                }
 
-            _context.Questions.Remove(question);
-            await _context.SaveChangesAsync();
+                var embeddings =
+                    await _context.QuestionEmbeddings
+                    .Where(e =>
+                        e.QuestionId == id)
+                    .ToListAsync();
 
-            return Ok();
+                if (embeddings.Any())
+                {
+                    _context.QuestionEmbeddings
+                        .RemoveRange(embeddings);
+                }
+
+                _context.Questions
+                    .Remove(question);
+
+                await _context.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    message =
+                        "Question deleted successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    error = ex.Message
+                });
+            }
         }
     }
 }

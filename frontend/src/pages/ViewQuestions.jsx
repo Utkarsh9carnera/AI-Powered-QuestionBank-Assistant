@@ -3,32 +3,47 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function ViewQuestions() {
-  const [questions, setQuestions] =
-    useState([]);
-
+  const [questions, setQuestions] = useState([]);
   const navigate = useNavigate();
 
   const loadQuestions = async () => {
-    const res = await axios.get(
-      "https://ai-powered-questionbank-assistant.onrender.com/api/questions"
-    );
+    try {
+      const res = await axios.get(
+        "https://ai-powered-questionbank-assistant.onrender.com/api/questions"
+      );
 
-    setQuestions(res.data);
+      setQuestions(res.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const deleteQuestion = async (id) => {
-    if (
-      !window.confirm(
-        "Delete this question?"
-      )
-    )
-      return;
-
-    await axios.delete(
-      `http://localhost:5199/api/questions/${id}`
+    const confirmDelete = window.confirm(
+      "Delete this question?"
     );
 
-    loadQuestions();
+    if (!confirmDelete) return;
+
+    try {
+      const response = await axios.delete(
+        `https://ai-powered-questionbank-assistant.onrender.com/api/questions/${id}`
+      );
+
+      console.log(response.data);
+
+      alert("Question deleted successfully");
+
+      loadQuestions();
+    } catch (error) {
+      console.error(error);
+
+      alert(
+        error?.response?.data?.error ||
+        error?.response?.data?.message ||
+        "Delete failed"
+      );
+    }
   };
 
   useEffect(() => {
@@ -54,9 +69,7 @@ function ViewQuestions() {
             <tr key={q.questionId}>
               <td>{q.questionId}</td>
 
-              <td>
-                {q.questionText}
-              </td>
+              <td>{q.questionText}</td>
 
               <td>{q.category}</td>
 
@@ -64,9 +77,7 @@ function ViewQuestions() {
                 <button
                   className="edit-btn"
                   onClick={() =>
-                    navigate(
-                      `/edit/${q.questionId}`
-                    )
+                    navigate(`/edit/${q.questionId}`)
                   }
                 >
                   Edit
@@ -75,9 +86,7 @@ function ViewQuestions() {
                 <button
                   className="delete-btn"
                   onClick={() =>
-                    deleteQuestion(
-                      q.questionId
-                    )
+                    deleteQuestion(q.questionId)
                   }
                 >
                   Delete
