@@ -1,34 +1,25 @@
 import { useState } from "react";
 import axios from "axios";
-import ReactMarkdown from "react-markdown";
 
 function Dashboard() {
-  const [question, setQuestion] = useState("");
+  const [query, setQuery] = useState("");
   const [answer, setAnswer] = useState("");
-  const [source, setSource] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const askAI = async () => {
-    if (!question.trim()) {
-      alert("Please enter a question");
-      return;
-    }
+  const handleSearch = async () => {
+    if (!query.trim()) return;
 
     try {
       setLoading(true);
 
-      const response = await axios.post(
-        "https://ai-powered-questionbank-assistant.onrender.com/api/questions",
-        {
-          question: question,
-        }
+      const response = await axios.get(
+        `https://ai-powered-questionbank-assistant.onrender.com/api/questions/search?query=${query}`
       );
 
-      setAnswer(response.data.answer || "");
-      setSource(response.data.source || "");
+      setAnswer(response.data.answer);
     } catch (error) {
       console.error(error);
-      alert("Failed to get answer");
+      setAnswer("Error fetching answer.");
     } finally {
       setLoading(false);
     }
@@ -36,55 +27,25 @@ function Dashboard() {
 
   return (
     <div className="dashboard-container">
-      <div className="dashboard-card">
-        <h1 className="title">
-          AI Question Bank Assistant
-        </h1>
+      <h1>AI Question Bank Assistant</h1>
 
-        <p className="subtitle">
-          Ask questions from your Question Bank
-        </p>
+      <input
+        type="text"
+        placeholder="Ask anything..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
 
-        <div className="search-box">
-          <input
-            type="text"
-            placeholder="Ask anything..."
-            value={question}
-            onChange={(e) =>
-              setQuestion(e.target.value)
-            }
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                askAI();
-              }
-            }}
-          />
+      <button onClick={handleSearch}>
+        {loading ? "Searching..." : "Search"}
+      </button>
 
-          <button onClick={askAI}>
-            {loading
-              ? "🔍 Searching..."
-              : "Search"}
-          </button>
+      {answer && (
+        <div style={{ marginTop: "20px" }}>
+          <h3>Answer:</h3>
+          <p>{answer}</p>
         </div>
-
-        {answer && (
-          <div className="answer-card">
-            <h2>Answer</h2>
-
-            <div className="source-wrapper">
-              <span className="source-badge">
-                {source}
-              </span>
-            </div>
-
-            <div className="answer-content">
-              <ReactMarkdown>
-                {answer}
-              </ReactMarkdown>
-            </div>
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 }
