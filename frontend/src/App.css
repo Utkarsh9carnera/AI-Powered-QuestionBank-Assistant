@@ -320,6 +320,7 @@ body{
 
 .questions-table{
     width:100%;
+    table-layout:fixed;
     border-collapse:collapse;
     border-radius:18px;
     overflow:hidden;
@@ -343,7 +344,7 @@ body{
 }
 
 .questions-table td{
-    padding:22px 18px;
+    padding:20px 15px;
     color:white;
     font-size:17px;
     text-align:center;
@@ -371,12 +372,13 @@ body{
 
 .questions-table th:nth-child(2),
 .questions-table td:nth-child(2){
-    width:45%;
+    width:42%;
 }
 
 .questions-table th:nth-child(3),
 .questions-table td:nth-child(3){
-    width:22%;
+    width:25%;
+    white-space:nowrap;
 }
 
 .questions-table th:nth-child(4),
@@ -386,20 +388,15 @@ body{
 
 /* ACTION BUTTONS */
 
-.questions-table td:last-child{
-    text-align:center;
-}
-
 .actions-cell{
     display:flex;
     justify-content:center;
     align-items:center;
     gap:12px;
-    width:100%;
 }
 
 .edit-btn{
-    min-width:80px;
+    width:80px;
     height:40px;
     background:#16a34a;
     color:white;
@@ -408,7 +405,6 @@ body{
     cursor:pointer;
     font-size:14px;
     font-weight:600;
-    transition:.3s;
 }
 
 .edit-btn:hover{
@@ -416,7 +412,7 @@ body{
 }
 
 .delete-btn{
-    min-width:80px;
+    width:80px;
     height:40px;
     background:#dc2626;
     color:white;
@@ -425,7 +421,6 @@ body{
     cursor:pointer;
     font-size:14px;
     font-weight:600;
-    transition:.3s;
 }
 
 .delete-btn:hover{

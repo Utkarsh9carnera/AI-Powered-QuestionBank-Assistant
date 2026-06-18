@@ -50,11 +50,13 @@ function ViewQuestions() {
 
   return (
     <div className="questions-container">
+
       <h2 className="questions-title">
         All Questions ({questions.length})
       </h2>
 
       <table className="questions-table">
+
         <thead>
           <tr>
             <th>ID</th>
@@ -68,35 +70,41 @@ function ViewQuestions() {
           {questions.length > 0 ? (
             questions.map((q) => (
               <tr key={q.questionId}>
+
                 <td>{q.questionId}</td>
 
                 <td>{q.questionText}</td>
 
                 <td>{q.category}</td>
 
-                <td className="actions-cell">
-                  <button
-                    className="edit-btn"
-                    onClick={() =>
-                      navigate(
-                        `/edit/${q.questionId}`
-                      )
-                    }
-                  >
-                    Edit
-                  </button>
+                <td>
+                  <div className="actions-cell">
 
-                  <button
-                    className="delete-btn"
-                    onClick={() =>
-                      deleteQuestion(
-                        q.questionId
-                      )
-                    }
-                  >
-                    Delete
-                  </button>
+                    <button
+                      className="edit-btn"
+                      onClick={() =>
+                        navigate(
+                          `/edit/${q.questionId}`
+                        )
+                      }
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      className="delete-btn"
+                      onClick={() =>
+                        deleteQuestion(
+                          q.questionId
+                        )
+                      }
+                    >
+                      Delete
+                    </button>
+
+                  </div>
                 </td>
+
               </tr>
             ))
           ) : (
@@ -110,7 +118,9 @@ function ViewQuestions() {
             </tr>
           )}
         </tbody>
+
       </table>
+
     </div>
   );
 }
