@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using QuestionBankAssistant.data;
+using QuestionBankAssistant.Models;
 using QuestionBankAssistant.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -57,7 +58,48 @@ app.UseAuthorization();
 
 // API Controllers
 app.MapControllers();
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
+    if (!context.Questions.Any())
+    {
+        context.Questions.AddRange(
+            new Question
+            {
+                QuestionText = "What is React?",
+                AnswerText = "React is a JavaScript library for building user interfaces.",
+                Category = "Web Development"
+            },
+            new Question
+            {
+                QuestionText = "What is AWS?",
+                AnswerText = "AWS is Amazon's cloud computing platform.",
+                Category = "Cloud Computing"
+            },
+            new Question
+            {
+                QuestionText = "What is SQL?",
+                AnswerText = "SQL is used to manage and query relational databases.",
+                Category = "Database"
+            },
+            new Question
+            {
+                QuestionText = "What is Machine Learning?",
+                AnswerText = "Machine Learning enables systems to learn from data without explicit programming.",
+                Category = "Artificial Intelligence"
+            },
+            new Question
+            {
+                QuestionText = "Who is Cristiano Ronaldo?",
+                AnswerText = "Cristiano Ronaldo is a Portuguese professional football player.",
+                Category = "Sports"
+            }
+        );
+
+        context.SaveChanges();
+    }
+}
 // MVC Routes
 app.MapControllerRoute(
     name: "default",
