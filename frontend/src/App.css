@@ -386,18 +386,24 @@ body{
 
 /* ACTION BUTTONS */
 
+.questions-table td:last-child{
+    text-align:center;
+}
+
 .actions-cell{
     display:flex;
     justify-content:center;
     align-items:center;
-    gap:10px;
+    gap:12px;
+    width:100%;
 }
 
 .edit-btn{
+    min-width:80px;
+    height:40px;
     background:#16a34a;
     color:white;
     border:none;
-    padding:10px 18px;
     border-radius:8px;
     cursor:pointer;
     font-size:14px;
@@ -410,10 +416,11 @@ body{
 }
 
 .delete-btn{
+    min-width:80px;
+    height:40px;
     background:#dc2626;
     color:white;
     border:none;
-    padding:10px 18px;
     border-radius:8px;
     cursor:pointer;
     font-size:14px;
@@ -431,7 +438,6 @@ body{
     color:white;
     font-size:18px;
 }
-
 /* =========================
    MOBILE
 ========================= */
