@@ -1,74 +1,76 @@
 /* HOME PAGE */
 
+/* HOME PAGE */
+
 .dashboard{
     min-height:100vh;
     display:flex;
     justify-content:center;
     align-items:flex-start;
-    padding:80px 20px;
+    padding:40px 20px;
     background:#020b45;
 }
 
 .search-card{
     width:100%;
-    max-width:1100px;
+    max-width:950px;
     background:#18265a;
-    border-radius:28px;
-    padding:40px;
+    border-radius:24px;
+    padding:30px;
     box-shadow:0 10px 30px rgba(0,0,0,.35);
 }
 
 .search-card h1{
     text-align:center;
     color:white;
-    font-size:72px;
+    font-size:52px;
     line-height:1.1;
-    margin-bottom:15px;
+    margin-bottom:10px;
 }
 
 .subtitle{
     text-align:center;
     color:#d4dcff;
-    font-size:22px;
-    margin-bottom:30px;
+    font-size:18px;
+    margin-bottom:25px;
 }
 
 /* HOW IT WORKS */
 
 .guide-box{
     background:#223469;
-    border-radius:20px;
-    padding:25px;
-    margin-bottom:30px;
+    border-radius:18px;
+    padding:20px;
+    margin-bottom:25px;
 }
 
 .guide-box h3{
     text-align:center;
     color:white;
-    font-size:30px;
-    margin-bottom:20px;
+    font-size:22px;
+    margin-bottom:15px;
 }
 
 .steps{
     display:flex;
-    gap:20px;
+    gap:15px;
 }
 
 .step{
     flex:1;
     background:#30457d;
-    border-radius:16px;
-    padding:20px;
+    border-radius:14px;
+    padding:15px;
     text-align:center;
     color:white;
-    font-size:18px;
+    font-size:15px;
     font-weight:600;
 }
 
 .step span{
     display:block;
-    font-size:32px;
-    margin-bottom:10px;
+    font-size:24px;
+    margin-bottom:8px;
 }
 
 /* SAMPLE QUESTIONS */
@@ -76,27 +78,26 @@
 .popular-title{
     color:white;
     text-align:center;
-    font-size:28px;
-    margin-bottom:20px;
+    font-size:22px;
+    margin-bottom:15px;
 }
 
 .sample-buttons{
     display:flex;
     flex-wrap:wrap;
     justify-content:center;
-    gap:12px;
-    margin-bottom:30px;
+    gap:10px;
+    margin-bottom:25px;
 }
 
 .sample-btn{
     border:none;
-    outline:none;
     cursor:pointer;
-    padding:12px 18px;
-    border-radius:30px;
+    padding:10px 16px;
+    border-radius:25px;
     background:#30457d;
     color:white;
-    font-size:15px;
+    font-size:14px;
     transition:0.3s;
 }
 
@@ -108,18 +109,18 @@
 
 .search-box{
     display:flex;
-    gap:20px;
+    gap:15px;
 }
 
 .search-box input{
     flex:1;
-    height:72px;
+    height:58px;
     border:none;
-    border-radius:18px;
-    padding:0 25px;
+    border-radius:15px;
+    padding:0 20px;
     background:#30457d;
     color:white;
-    font-size:24px;
+    font-size:18px;
     outline:none;
 }
 
@@ -128,11 +129,11 @@
 }
 
 .search-box button{
-    width:250px;
+    width:180px;
     border:none;
-    border-radius:18px;
+    border-radius:15px;
     cursor:pointer;
-    font-size:28px;
+    font-size:20px;
     font-weight:700;
     color:white;
     background:linear-gradient(
@@ -140,39 +141,59 @@
         #7b2ff7,
         #d946ef
     );
-    transition:0.3s;
-}
-
-.search-box button:hover{
-    transform:translateY(-2px);
 }
 
 /* ANSWER BOX */
 
 .answer-box{
-    margin-top:30px;
+    margin-top:25px;
     background:#223469;
-    border-radius:20px;
-    padding:30px;
-    text-align:center;
+    border-radius:18px;
+    padding:20px;
+    max-height:500px;
+    overflow-y:auto;
 }
 
 .answer-box h2{
     color:white;
-    font-size:42px;
-    margin-bottom:15px;
-}
-
-.answer-box h3{
-    color:#d6dcff;
-    margin-bottom:20px;
+    font-size:28px;
+    margin-bottom:10px;
 }
 
 .answer-box p{
     color:white;
-    font-size:22px;
-    line-height:1.8;
+    font-size:17px;
+    line-height:1.6;
     white-space:pre-wrap;
+}
+
+.source{
+    color:#cfd8ff;
+    font-size:14px;
+    margin-bottom:12px;
+    font-weight:600;
+}
+
+/* NAVBAR */
+
+.navbar{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:50px;
+    padding:20px 0;
+    background:#020b45;
+}
+
+.navbar a{
+    color:white;
+    text-decoration:none;
+    font-size:20px;
+    font-weight:600;
+}
+
+.navbar a:hover{
+    color:#d946ef;
 }
 
 /* MOBILE */
@@ -211,4 +232,23 @@
     .answer-box p{
         font-size:18px;
     }
+    .navbar{
+    display:flex;
+    justify-content:center;
+    gap:60px;
+    padding:20px 0;
+}
+
+.navbar a{
+    color:white;
+    text-decoration:none;
+    font-size:22px;
+    font-weight:600;
+}
+
+.source{
+    color:#cfd8ff;
+    margin-bottom:15px;
+    font-weight:600;
+}
 }

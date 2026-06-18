@@ -19,10 +19,19 @@ function Dashboard() {
 
     try {
       const response = await axios.get(
-        `https://ai-powered-questionbank-assistant.onrender.com/api/AIApi/ask?query=${encodeURIComponent(query)}`
+        `https://ai-powered-questionbank-assistant.onrender.com/api/AIApi/ask?query=${encodeURIComponent(
+          query
+        )}`
       );
 
-      setResult(response.data.answer);
+      const cleanAnswer = response.data.answer
+        ?.replace(/\*\*/g, "")
+        ?.replace(/#{1,6}/g, "")
+        ?.replace(/={2,}/g, "")
+        ?.replace(/-{2,}/g, "")
+        ?.replace(/\n{3,}/g, "\n\n");
+
+      setResult(cleanAnswer);
       setSource(response.data.source);
     } catch (error) {
       console.error(error);
@@ -33,68 +42,72 @@ function Dashboard() {
 
   return (
     <div className="dashboard">
-
       <div className="search-card">
-<h1>AI Question Bank Assistant</h1>
 
-<p className="subtitle">
-  Search your Question Bank or get answers from AI
-</p>
+        <h1>AI Question Bank Assistant</h1>
 
-<div className="guide-box">
-  <h3>How It Works</h3>
+        <p className="subtitle">
+          Search your Question Bank or get answers from AI
+        </p>
 
-  <div className="steps">
-    <div className="step">
-      <span>➊</span>
-      Add Questions
-    </div>
+        <div className="guide-box">
+          <h3>How It Works</h3>
 
-    <div className="step">
-      <span>➋</span>
-      Search Question Bank
-    </div>
+          <div className="steps">
 
-    <div className="step">
-      <span>➌</span>
-      AI answers if not found
-    </div>
-  </div>
-</div>
+            <div className="step">
+              <span>➊</span>
+              Add Questions
+            </div>
 
-<h3 className="popular-title">
-  Popular Questions
-</h3>
+            <div className="step">
+              <span>➋</span>
+              Search Question Bank
+            </div>
 
-<div className="sample-buttons">
-  {sampleQuestions.map((item, index) => (
-    <button
-      key={index}
-      className="sample-btn"
-      onClick={() => setQuery(item)}
-    >
-      {item}
-    </button>
-  ))}
-</div>
+            <div className="step">
+              <span>➌</span>
+              AI answers if no match is found
+            </div>
 
-<div className="search-box">
-  <input
-    type="text"
-    placeholder="Ask anything..."
-    value={query}
-    onChange={(e) => setQuery(e.target.value)}
-    onKeyDown={(e) => {
-      if (e.key === "Enter") {
-        handleSearch();
-      }
-    }}
-  />
+          </div>
+        </div>
 
-  <button onClick={handleSearch}>
-    Search
-  </button>
-</div>
+        <h3 className="popular-title">
+          Popular Questions
+        </h3>
+
+        <div className="sample-buttons">
+          {sampleQuestions.map((item, index) => (
+            <button
+              key={index}
+              className="sample-btn"
+              onClick={() => setQuery(item)}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+
+        <div className="search-box">
+
+          <input
+            type="text"
+            placeholder="Ask anything..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
+          />
+
+          <button onClick={handleSearch}>
+            Search
+          </button>
+
+        </div>
 
         {result && (
           <div className="answer-box">
@@ -113,7 +126,6 @@ function Dashboard() {
         )}
 
       </div>
-
     </div>
   );
 }
