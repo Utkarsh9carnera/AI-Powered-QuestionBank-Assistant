@@ -423,4 +423,26 @@ body{
   margin-bottom:15px;
   color:#c7d2ff;
 }
+.sample-buttons{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:12px;
+    margin-bottom:25px;
+}
+
+.sample-btn{
+    background:#27345c;
+    color:white;
+    border:none;
+    padding:12px 18px;
+    border-radius:30px;
+    cursor:pointer;
+    font-size:14px;
+    transition:.3s;
+}
+
+.sample-btn:hover{
+    background:#8b3dff;
+}
 }

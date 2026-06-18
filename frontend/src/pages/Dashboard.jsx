@@ -35,56 +35,66 @@ function Dashboard() {
     <div className="dashboard">
 
       <div className="search-card">
+<h1>AI Question Bank Assistant</h1>
 
-        <h1>AI Question Bank Assistant</h1>
+<p className="subtitle">
+  Search your Question Bank or get answers from AI
+</p>
 
-        <p className="subtitle">
-          Search your Question Bank or get answers from AI.
-        </p>
+<div className="guide-box">
+  <h3>How It Works</h3>
 
-        <div className="guide-box">
-          <h3>How To Use</h3>
+  <div className="steps">
+    <div className="step">
+      <span>➊</span>
+      Add Questions
+    </div>
 
-          <ul>
-            <li>Add your own questions using Add Question.</li>
-            <li>Search from your Question Bank.</li>
-            <li>If no match is found, AI will generate an answer.</li>
-          </ul>
-        </div>
+    <div className="step">
+      <span>➋</span>
+      Search Question Bank
+    </div>
 
-        <div className="sample-section">
-          <h3>Try These Questions</h3>
+    <div className="step">
+      <span>➌</span>
+      AI answers if not found
+    </div>
+  </div>
+</div>
 
-          <div className="sample-buttons">
-            {sampleQuestions.map((item, index) => (
-              <button
-                key={index}
-                className="sample-btn"
-                onClick={() => setQuery(item)}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-        </div>
+<h3 className="popular-title">
+  Popular Questions
+</h3>
 
-        <div className="search-box">
-          <input
-            type="text"
-            placeholder="Ask anything..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleSearch();
-              }
-            }}
-          />
+<div className="sample-buttons">
+  {sampleQuestions.map((item, index) => (
+    <button
+      key={index}
+      className="sample-btn"
+      onClick={() => setQuery(item)}
+    >
+      {item}
+    </button>
+  ))}
+</div>
 
-          <button onClick={handleSearch}>
-            Search
-          </button>
-        </div>
+<div className="search-box">
+  <input
+    type="text"
+    placeholder="Ask anything..."
+    value={query}
+    onChange={(e) => setQuery(e.target.value)}
+    onKeyDown={(e) => {
+      if (e.key === "Enter") {
+        handleSearch();
+      }
+    }}
+  />
+
+  <button onClick={handleSearch}>
+    Search
+  </button>
+</div>
 
         {result && (
           <div className="answer-box">
