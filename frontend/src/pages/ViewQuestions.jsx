@@ -6,53 +6,44 @@ function ViewQuestions() {
   const [questions, setQuestions] = useState([]);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    loadQuestions();
+  }, []);
+
   const loadQuestions = async () => {
     try {
-      const res = await axios.get(
+      const response = await axios.get(
         "https://ai-powered-questionbank-assistant.onrender.com/api/questions"
       );
 
-      setQuestions(res.data);
+      console.log(response.data);
+      setQuestions(response.data);
     } catch (error) {
       console.error(error);
     }
   };
 
   const deleteQuestion = async (id) => {
-    const confirmDelete = window.confirm(
-      "Delete this question?"
-    );
-
-    if (!confirmDelete) return;
+    if (!window.confirm("Delete this question?")) return;
 
     try {
-      const response = await axios.delete(
+      await axios.delete(
         `https://ai-powered-questionbank-assistant.onrender.com/api/questions/${id}`
       );
 
-      console.log(response.data);
-
       alert("Question deleted successfully");
-
       loadQuestions();
     } catch (error) {
       console.error(error);
-
-      alert(
-        error?.response?.data?.error ||
-        error?.response?.data?.message ||
-        "Delete failed"
-      );
+      alert("Delete failed");
     }
   };
 
-  useEffect(() => {
-    loadQuestions();
-  }, []);
-
   return (
     <div className="questions-container">
-      <h2>All Questions</h2>
+      <h2 className="questions-title">
+        All Questions ({questions.length})
+      </h2>
 
       <table className="questions-table">
         <thead>
@@ -65,35 +56,50 @@ function ViewQuestions() {
         </thead>
 
         <tbody>
-          {questions.map((q) => (
-            <tr key={q.questionId}>
-              <td>{q.questionId}</td>
+          {questions.length > 0 ? (
+            questions.map((q) => (
+              <tr key={q.questionId}>
+                <td>{q.questionId}</td>
 
-              <td>{q.questionText}</td>
+                <td>{q.questionText}</td>
 
-              <td>{q.category}</td>
+                <td>{q.category}</td>
 
-              <td>
-                <button
-                  className="edit-btn"
-                  onClick={() =>
-                    navigate(`/edit/${q.questionId}`)
-                  }
-                >
-                  Edit
-                </button>
+                <td>
+                  <button
+                    className="edit-btn"
+                    onClick={() =>
+                      navigate(`/edit/${q.questionId}`)
+                    }
+                  >
+                    Edit
+                  </button>
 
-                <button
-                  className="delete-btn"
-                  onClick={() =>
-                    deleteQuestion(q.questionId)
-                  }
-                >
-                  Delete
-                </button>
+                  <button
+                    className="delete-btn"
+                    onClick={() =>
+                      deleteQuestion(q.questionId)
+                    }
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td
+                colSpan="4"
+                style={{
+                  textAlign: "center",
+                  padding: "20px",
+                  color: "white"
+                }}
+              >
+                No Questions Found
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>
