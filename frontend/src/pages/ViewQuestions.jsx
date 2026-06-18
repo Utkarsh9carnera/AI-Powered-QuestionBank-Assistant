@@ -16,7 +16,6 @@ function ViewQuestions() {
         "https://ai-powered-questionbank-assistant.onrender.com/api/questions"
       );
 
-      console.log(response.data);
       setQuestions(response.data);
     } catch (error) {
       console.error(error);
@@ -24,7 +23,11 @@ function ViewQuestions() {
   };
 
   const deleteQuestion = async (id) => {
-    if (!window.confirm("Delete this question?")) return;
+    const confirmDelete = window.confirm(
+      "Delete this question?"
+    );
+
+    if (!confirmDelete) return;
 
     try {
       await axios.delete(
@@ -32,7 +35,13 @@ function ViewQuestions() {
       );
 
       alert("Question deleted successfully");
-      loadQuestions();
+
+      setQuestions((prev) =>
+        prev.filter(
+          (question) =>
+            question.questionId !== id
+        )
+      );
     } catch (error) {
       console.error(error);
       alert("Delete failed");
@@ -65,11 +74,13 @@ function ViewQuestions() {
 
                 <td>{q.category}</td>
 
-                <td>
+                <td className="actions-cell">
                   <button
                     className="edit-btn"
                     onClick={() =>
-                      navigate(`/edit/${q.questionId}`)
+                      navigate(
+                        `/edit/${q.questionId}`
+                      )
                     }
                   >
                     Edit
@@ -78,7 +89,9 @@ function ViewQuestions() {
                   <button
                     className="delete-btn"
                     onClick={() =>
-                      deleteQuestion(q.questionId)
+                      deleteQuestion(
+                        q.questionId
+                      )
                     }
                   >
                     Delete
@@ -90,11 +103,7 @@ function ViewQuestions() {
             <tr>
               <td
                 colSpan="4"
-                style={{
-                  textAlign: "center",
-                  padding: "20px",
-                  color: "white"
-                }}
+                className="empty-state"
               >
                 No Questions Found
               </td>

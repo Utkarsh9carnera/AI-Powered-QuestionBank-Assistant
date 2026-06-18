@@ -300,17 +300,22 @@ body{
    VIEW QUESTIONS
 ========================= */
 
+/* =========================
+   VIEW QUESTIONS
+========================= */
+
 .questions-container{
     max-width:1200px;
     margin:30px auto;
     padding:20px;
 }
 
-.questions-container h2{
+.questions-title{
     text-align:center;
     color:white;
     margin-bottom:25px;
     font-size:34px;
+    font-weight:700;
 }
 
 .questions-table{
@@ -342,6 +347,7 @@ body{
     color:white;
     font-size:17px;
     text-align:center;
+    vertical-align:middle;
 }
 
 .questions-table tbody tr{
@@ -355,6 +361,8 @@ body{
 .questions-table tbody tr:hover{
     background:#314c97;
 }
+
+/* COLUMN WIDTHS */
 
 .questions-table th:nth-child(1),
 .questions-table td:nth-child(1){
@@ -376,7 +384,9 @@ body{
     width:25%;
 }
 
-.questions-table td:last-child{
+/* ACTION BUTTONS */
+
+.actions-cell{
     display:flex;
     justify-content:center;
     align-items:center;
@@ -390,6 +400,13 @@ body{
     padding:10px 18px;
     border-radius:8px;
     cursor:pointer;
+    font-size:14px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.edit-btn:hover{
+    background:#15803d;
 }
 
 .delete-btn{
@@ -399,6 +416,20 @@ body{
     padding:10px 18px;
     border-radius:8px;
     cursor:pointer;
+    font-size:14px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.delete-btn:hover{
+    background:#b91c1c;
+}
+
+.empty-state{
+    text-align:center;
+    padding:30px;
+    color:white;
+    font-size:18px;
 }
 
 /* =========================
