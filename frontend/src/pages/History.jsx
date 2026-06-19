@@ -2,218 +2,208 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 function History() {
-  const [history, setHistory] = useState([]);
-  const [expandedId, setExpandedId] = useState(null);
+const [history, setHistory] = useState([]);
+const [expandedId, setExpandedId] = useState(null);
 
-  useEffect(() => {
-    fetchHistory();
-  }, []);
+useEffect(() => {
+fetchHistory();
+}, []);
 
-  const fetchHistory = async () => {
-    try {
-      const user = JSON.parse(
-        localStorage.getItem("user")
-      );
+const fetchHistory = async () => {
+try {
+const user = JSON.parse(
+localStorage.getItem("user")
+);
 
-      if (!user?.email) return;
+```
+  if (!user?.email) return;
 
-      const response = await axios.get(
-        `https://ai-powered-questionbank-assistant.onrender.com/api/AIApi/history?userEmail=${user.email}`
-      );
+  const response = await axios.get(
+    `https://ai-powered-questionbank-assistant.onrender.com/api/AIApi/history?userEmail=${user.email}`
+  );
 
-      setHistory(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  setHistory(response.data);
+} catch (error) {
+  console.error(error);
+}
+```
 
-  const clearHistory = async () => {
-    try {
-      const user = JSON.parse(
-        localStorage.getItem("user")
-      );
+};
 
-      const confirmDelete = window.confirm(
-        "Are you sure you want to clear your entire history?"
-      );
+const clearHistory = async () => {
+try {
+const user = JSON.parse(
+localStorage.getItem("user")
+);
 
-      if (!confirmDelete) return;
+```
+  const confirmDelete = window.confirm(
+    "Are you sure you want to clear your history?"
+  );
 
-      await axios.delete(
-        `https://ai-powered-questionbank-assistant.onrender.com/api/AIApi/history/${user.email}`
-      );
+  if (!confirmDelete) return;
 
-      setHistory([]);
-    } catch (error) {
-      console.error(error);
-      alert("Failed to clear history");
-    }
-  };
+  await axios.delete(
+    `https://ai-powered-questionbank-assistant.onrender.com/api/AIApi/history/${user.email}`
+  );
 
-  return (
-    <div
-      style={{
-        maxWidth: "1300px",
-        margin: "50px auto",
-        padding: "0 20px",
-        color: "white",
-      }}
-    >
-      {/* Header */}
-      <div
+  setHistory([]);
+} catch (error) {
+  console.error(error);
+  alert("Failed to clear history");
+}
+```
+
+};
+
+return (
+<div
+style={{
+maxWidth: "1100px",
+margin: "40px auto",
+padding: "0 20px",
+color: "white",
+}}
+>
+<div
+style={{
+display: "flex",
+justifyContent: "space-between",
+alignItems: "center",
+marginBottom: "30px",
+flexWrap: "wrap",
+gap: "12px",
+}}
+>
+<h1
+style={{
+fontSize: "2.4rem",
+fontWeight: "700",
+margin: 0,
+}}
+>
+Search History </h1>
+
+```
+    {history.length > 0 && (
+      <button
+        onClick={clearHistory}
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "35px",
-          flexWrap: "wrap",
-          gap: "15px",
+          background: "#ff5c7a",
+          border: "none",
+          color: "white",
+          padding: "10px 16px",
+          borderRadius: "10px",
+          cursor: "pointer",
+          fontSize: "14px",
+          fontWeight: "600",
         }}
       >
-        <h1
+        Clear History
+      </button>
+    )}
+  </div>
+
+  {history.length === 0 ? (
+    <div
+      style={{
+        background: "#202a66",
+        padding: "30px",
+        borderRadius: "14px",
+        textAlign: "center",
+      }}
+    >
+      <h3>No searches found</h3>
+      <p style={{ color: "#cbd5e1" }}>
+        Your search history will appear here.
+      </p>
+    </div>
+  ) : (
+    history.map((item) => {
+      const isExpanded =
+        expandedId === item.id;
+
+      const shortAnswer =
+        item.answer?.split(" ").length > 8
+          ? item.answer
+              .split(" ")
+              .slice(0, 8)
+              .join(" ") + "..."
+          : item.answer;
+
+      return (
+        <div
+          key={item.id}
+          onClick={() =>
+            setExpandedId(
+              isExpanded ? null : item.id
+            )
+          }
           style={{
-            fontSize: "3.2rem",
-            fontWeight: "800",
-            margin: 0,
+            background: "#202a66",
+            padding: "20px",
+            borderRadius: "14px",
+            marginBottom: "16px",
+            cursor: "pointer",
+            border: isExpanded
+              ? "1px solid #a855f7"
+              : "1px solid rgba(255,255,255,0.05)",
+            transition: "all 0.25s ease",
           }}
         >
-          📜 Search History
-        </h1>
-
-        {history.length > 0 && (
-          <button
-            onClick={clearHistory}
+          <h2
             style={{
-              background:
-                "linear-gradient(135deg,#ff4d6d,#ff758f)",
-              border: "none",
-              color: "white",
-              padding: "12px 22px",
-              borderRadius: "12px",
-              cursor: "pointer",
-              fontSize: "15px",
+              marginBottom: "12px",
+              fontSize: "22px",
               fontWeight: "600",
-              boxShadow:
-                "0 8px 20px rgba(255,77,109,0.3)",
+              color: "#fff",
             }}
           >
-            🗑 Clear History
-          </button>
-        )}
-      </div>
-
-      {history.length === 0 ? (
-        <div
-          style={{
-            background:
-              "linear-gradient(145deg,#1f275f,#252f73)",
-            padding: "40px",
-            borderRadius: "20px",
-            textAlign: "center",
-            border:
-              "1px solid rgba(255,255,255,0.08)",
-          }}
-        >
-          <h2>No searches found</h2>
+            {item.question}
+          </h2>
 
           <p
             style={{
-              color: "#cbd5e1",
+              color: "#d6d6d6",
+              lineHeight: "1.8",
+              fontSize: "16px",
+              marginBottom: "15px",
             }}
           >
-            Your search history will appear here.
-          </p>
-        </div>
-      ) : (
-        history.map((item) => {
-          const isExpanded =
-            expandedId === item.id;
-
-          const shortAnswer =
-            item.answer?.split(" ").length > 8
+            {isExpanded
               ? item.answer
-                  .split(" ")
-                  .slice(0, 8)
-                  .join(" ") + "..."
-              : item.answer;
+              : shortAnswer}
+          </p>
 
-          return (
-            <div
-              key={item.id}
-              onClick={() =>
-                setExpandedId(
-                  isExpanded ? null : item.id
-                )
-              }
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              borderTop:
+                "1px solid rgba(255,255,255,0.06)",
+              paddingTop: "12px",
+            }}
+          >
+            <span
               style={{
-                background:
-                  "linear-gradient(145deg,#1f275f,#252f73)",
-                padding: "28px",
-                borderRadius: "20px",
-                marginBottom: "22px",
-                cursor: "pointer",
-                border: isExpanded
-                  ? "1px solid #c084fc"
-                  : "1px solid rgba(255,255,255,0.08)",
-                boxShadow:
-                  "0 8px 30px rgba(0,0,0,0.25)",
-                transition: "all 0.3s ease",
+                color: "#a855f7",
+                fontSize: "14px",
+                fontWeight: "600",
               }}
             >
-              {/* Question */}
-              <h2
-                style={{
-                  marginBottom: "16px",
-                  fontSize: "30px",
-                  fontWeight: "700",
-                  color: "#fff",
-                }}
-              >
-                {item.question}
-              </h2>
+              {isExpanded
+                ? "Hide Details"
+                : "View Details →"}
+            </span>
+          </div>
+        </div>
+      );
+    })
+  )}
+</div>
+```
 
-              {/* Answer */}
-              <p
-                style={{
-                  color: "#d4d8ff",
-                  lineHeight: "1.9",
-                  fontSize: "18px",
-                  marginBottom: "20px",
-                }}
-              >
-                {isExpanded
-                  ? item.answer
-                  : shortAnswer}
-              </p>
-
-              {/* Footer */}
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  borderTop:
-                    "1px solid rgba(255,255,255,0.08)",
-                  paddingTop: "15px",
-                }}
-              >
-                <span
-                  style={{
-                    color: "#c084fc",
-                    fontWeight: "600",
-                    fontSize: "15px",
-                  }}
-                >
-                  {isExpanded
-                    ? "▲ Show Less"
-                    : "▼ Read More"}
-                </span>
-              </div>
-            </div>
-          );
-        })
-      )}
-    </div>
-  );
+);
 }
 
 export default History;
