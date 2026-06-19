@@ -15,33 +15,33 @@ function Dashboard() {
   ];
 
   const handleSearch = async () => {
-    if (!query.trim()) return;
+  if (!query.trim()) return;
 
-    try {
-      const user = JSON.parse(
-  localStorage.getItem("user")
-);
+  try {
+    const user = JSON.parse(
+      localStorage.getItem("user")
+    );
 
-const email = user?.email || "guest";
+    const response = await axios.get(
+      `https://ai-powered-questionbank-assistant.onrender.com/api/AIApi/ask?query=${encodeURIComponent(
+        query
+      )}&userEmail=${user?.email}`
+    );
 
-const response = await axios.get(
-  `http://localhost:5199/api/AIApi/ask?query=${encodeURIComponent(query)}&userEmail=${email}`
-);
-      const cleanAnswer = response.data.answer
-        ?.replace(/\*\*/g, "")
-        ?.replace(/#{1,6}/g, "")
-        ?.replace(/={2,}/g, "")
-        ?.replace(/-{2,}/g, "")
-        ?.replace(/\n{3,}/g, "\n\n");
+    const cleanAnswer = response.data.answer
+      ?.replace(/\*\*/g, "")
+      ?.replace(/#{1,6}/g, "")
+      ?.replace(/-{2,}/g, "")
+      ?.replace(/\n{3,}/g, "\n\n");
 
-      setResult(cleanAnswer);
-      setSource(response.data.source);
-    } catch (error) {
-      console.error(error);
-      setResult("Error fetching answer");
-      setSource("");
-    }
-  };
+    setResult(cleanAnswer);
+    setSource(response.data.source);
+  } catch (error) {
+    console.error(error);
+    setResult("Error fetching answer");
+    setSource("");
+  }
+};
 
   return (
     <div className="dashboard">
