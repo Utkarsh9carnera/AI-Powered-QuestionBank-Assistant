@@ -22,8 +22,10 @@ function Dashboard() {
   localStorage.getItem("user")
 );
 
+const email = user?.email || "guest";
+
 const response = await axios.get(
-  `https://ai-powered-questionbank-assistant.onrender.com/api/AIApi/ask?query=${encodeURIComponent(query)}&userEmail=${encodeURIComponent(user?.email || "guest")}`
+  `http://localhost:5199/api/AIApi/ask?query=${encodeURIComponent(query)}&userEmail=${email}`
 );
       const cleanAnswer = response.data.answer
         ?.replace(/\*\*/g, "")

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using QuestionBankAssistant.data;
 using QuestionBankAssistant.Models;
 using QuestionBankAssistant.Services;
@@ -36,21 +37,28 @@ public class AIApiController : ControllerBase
             return BadRequest("Query cannot be empty");
         }
 
+        userEmail = string.IsNullOrWhiteSpace(userEmail)
+            ? "guest"
+            : userEmail;
+
         // =====================
         // STEP 1 - Exact Match
         // =====================
 
-        var exactMatch = _context.Questions
-            .FirstOrDefault(q =>
-                q.QuestionText.ToLower()
-                .Contains(query.ToLower()));
+        var searchText = query.ToLower().Trim();
+
+var exactMatch = _context.Questions
+    .AsEnumerable()
+    .FirstOrDefault(q =>
+        q.QuestionText.ToLower()
+        .Contains(searchText));
 
         if (exactMatch != null)
         {
             _context.SearchHistories.Add(
                 new SearchHistory
                 {
-                    UserEmail = userEmail ?? "guest",
+                    UserEmail = userEmail,
                     Question = query,
                     Answer = exactMatch.AnswerText,
                     CreatedAt = DateTime.Now
@@ -104,22 +112,21 @@ public class AIApiController : ControllerBase
                         bestQuestion =
                             _context.Questions
                             .FirstOrDefault(q =>
-                                q.QuestionId ==
-                                emb.QuestionId);
+                                q.QuestionId == emb.QuestionId);
                     }
                 }
                 catch
                 {
+                    // Skip invalid vectors
                 }
             }
 
-            if (bestQuestion != null &&
-                bestScore > 0.80)
+            if (bestQuestion != null && bestScore > 0.80)
             {
                 _context.SearchHistories.Add(
                     new SearchHistory
                     {
-                        UserEmail = userEmail ?? "guest",
+                        UserEmail = userEmail,
                         Question = query,
                         Answer = bestQuestion.AnswerText,
                         CreatedAt = DateTime.Now
@@ -144,7 +151,7 @@ public class AIApiController : ControllerBase
         }
 
         // =====================
-        // STEP 3 - AI Fallback
+        // STEP 3 - GROQ AI
         // =====================
 
         try
@@ -155,7 +162,7 @@ public class AIApiController : ControllerBase
             _context.SearchHistories.Add(
                 new SearchHistory
                 {
-                    UserEmail = userEmail ?? "guest",
+                    UserEmail = userEmail,
                     Question = query,
                     Answer = aiAnswer,
                     CreatedAt = DateTime.Now
@@ -176,17 +183,60 @@ public class AIApiController : ControllerBase
                 $"AI Error: {ex.Message}");
         }
     }
-
-    [HttpGet("history")]
-    public IActionResult GetHistory(
-        string userEmail)
+    [HttpGet("historycount")]
+public IActionResult HistoryCount()
+{
+    return Ok(new
     {
-        var history =
-            _context.SearchHistories
-            .Where(x =>
-                x.UserEmail == userEmail)
-            .OrderByDescending(x =>
-                x.CreatedAt)
+        count = _context.SearchHistories.Count()
+    });
+}
+[HttpGet("testinsert")]
+public async Task<IActionResult> TestInsert()
+{
+    var item = new SearchHistory
+    {
+        UserEmail = "guest",
+        Question = "Test Question",
+        Answer = "Test Answer",
+        CreatedAt = DateTime.Now
+    };
+
+    _context.SearchHistories.Add(item);
+
+    await _context.SaveChangesAsync();
+
+    return Ok("Inserted Successfully");
+}
+[HttpDelete("history/{email}")]
+public async Task<IActionResult> ClearHistory(
+    string email)
+{
+    var items =
+        _context.SearchHistories
+        .Where(x => x.UserEmail == email);
+
+    _context.SearchHistories.RemoveRange(items);
+
+    await _context.SaveChangesAsync();
+
+    return Ok(new
+    {
+        message = "History Cleared"
+    });
+}
+    [HttpGet("history")]
+    public IActionResult GetHistory(string userEmail)
+    {
+        if (string.IsNullOrWhiteSpace(userEmail))
+        {
+            return BadRequest("User email is required");
+        }
+
+        var history = _context.SearchHistories
+            .AsNoTracking()
+            .Where(x => x.UserEmail == userEmail)
+            .OrderByDescending(x => x.CreatedAt)
             .ToList();
 
         return Ok(history);
