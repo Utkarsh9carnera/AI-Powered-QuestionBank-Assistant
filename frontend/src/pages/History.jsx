@@ -33,6 +33,12 @@ function History() {
         localStorage.getItem("user")
       );
 
+      const confirmDelete = window.confirm(
+        "Are you sure you want to clear your entire history?"
+      );
+
+      if (!confirmDelete) return;
+
       await axios.delete(
         `https://ai-powered-questionbank-assistant.onrender.com/api/AIApi/history/${user.email}`
       );
@@ -47,40 +53,48 @@ function History() {
   return (
     <div
       style={{
-        maxWidth: "1200px",
+        maxWidth: "1300px",
         margin: "50px auto",
+        padding: "0 20px",
         color: "white",
       }}
     >
+      {/* Header */}
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: "30px",
+          marginBottom: "35px",
+          flexWrap: "wrap",
+          gap: "15px",
         }}
       >
         <h1
           style={{
-            fontSize: "3rem",
-            fontWeight: "700",
+            fontSize: "3.2rem",
+            fontWeight: "800",
+            margin: 0,
           }}
         >
-          Search History
+          📜 Search History
         </h1>
 
         {history.length > 0 && (
           <button
             onClick={clearHistory}
             style={{
-              background: "#ff4d6d",
+              background:
+                "linear-gradient(135deg,#ff4d6d,#ff758f)",
               border: "none",
               color: "white",
-              padding: "12px 20px",
+              padding: "12px 22px",
               borderRadius: "12px",
               cursor: "pointer",
               fontSize: "15px",
               fontWeight: "600",
+              boxShadow:
+                "0 8px 20px rgba(255,77,109,0.3)",
             }}
           >
             🗑 Clear History
@@ -91,12 +105,23 @@ function History() {
       {history.length === 0 ? (
         <div
           style={{
-            background: "#1f275f",
-            padding: "30px",
-            borderRadius: "15px",
+            background:
+              "linear-gradient(145deg,#1f275f,#252f73)",
+            padding: "40px",
+            borderRadius: "20px",
+            textAlign: "center",
+            border:
+              "1px solid rgba(255,255,255,0.08)",
           }}
         >
-          <h3>No searches found.</h3>
+          <h2>No searches found</h2>
+          <p
+            style={{
+              color: "#cbd5e1",
+            }}
+          >
+            Your search history will appear here.
+          </p>
         </div>
       ) : (
         history.map((item) => {
@@ -120,31 +145,39 @@ function History() {
                 )
               }
               style={{
-                background: "#1f275f",
-                padding: "25px",
-                borderRadius: "18px",
-                marginBottom: "20px",
+                background:
+                  "linear-gradient(145deg,#1f275f,#252f73)",
+                padding: "28px",
+                borderRadius: "20px",
+                marginBottom: "22px",
                 cursor: "pointer",
                 border: isExpanded
-                  ? "1px solid #a855f7"
-                  : "1px solid transparent",
-                transition: "0.3s",
+                  ? "1px solid #c084fc"
+                  : "1px solid rgba(255,255,255,0.08)",
+                boxShadow:
+                  "0 8px 30px rgba(0,0,0,0.25)",
+                transition: "all 0.3s ease",
               }}
             >
+              {/* Question */}
               <h2
                 style={{
-                  marginBottom: "12px",
-                  fontSize: "28px",
+                  marginBottom: "16px",
+                  fontSize: "30px",
+                  fontWeight: "700",
+                  color: "#fff",
                 }}
               >
                 {item.question}
               </h2>
 
+              {/* Answer */}
               <p
                 style={{
-                  color: "#d6d6d6",
-                  lineHeight: "1.8",
-                  fontSize: "17px",
+                  color: "#d4d8ff",
+                  lineHeight: "1.9",
+                  fontSize: "18px",
+                  marginBottom: "20px",
                 }}
               >
                 {isExpanded
@@ -152,35 +185,45 @@ function History() {
                   : shortAnswer}
               </p>
 
+              {/* Footer */}
               <div
                 style={{
-                  marginTop: "15px",
                   display: "flex",
                   justifyContent:
                     "space-between",
                   alignItems: "center",
+                  borderTop:
+                    "1px solid rgba(255,255,255,0.08)",
+                  paddingTop: "15px",
                 }}
               >
-                <small
+                <span
                   style={{
                     color: "#9ca3af",
+                    fontSize: "14px",
                   }}
                 >
+                  🕒{" "}
                   {new Date(
                     item.createdAt
-                  ).toLocaleString()}
-                </small>
+                  ).toLocaleString("en-IN", {
+                    timeZone:
+                      "Asia/Kolkata",
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}
+                </span>
 
                 <span
                   style={{
-                    color: "#a855f7",
-                    fontSize: "14px",
+                    color: "#c084fc",
                     fontWeight: "600",
+                    fontSize: "15px",
                   }}
                 >
                   {isExpanded
-                    ? "▲ Collapse"
-                    : "▼ Expand"}
+                    ? "▲ Show Less"
+                    : "▼ Read More"}
                 </span>
               </div>
             </div>
