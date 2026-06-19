@@ -2,16 +2,20 @@ using System;
 
 namespace QuestionBankAssistant.Models
 {
-    public class SearchHistory
-    {
-        public int Id { get; set; }
+public class SearchHistory
+{
+public int Id { get; set; }
 
-        public string UserEmail { get; set; }
+```
+    public string UserEmail { get; set; } = string.Empty;
 
-        public string Question { get; set; }
+    public string Question { get; set; } = string.Empty;
 
-        public string Answer { get; set; }
+    public string Answer { get; set; } = string.Empty;
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    }
+    public DateTimeOffset CreatedAt { get; set; } =
+        DateTimeOffset.UtcNow;
+}
+```
+
 }

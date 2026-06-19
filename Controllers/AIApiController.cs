@@ -61,7 +61,7 @@ var exactMatch = _context.Questions
                     UserEmail = userEmail,
                     Question = query,
                     Answer = exactMatch.AnswerText,
-                    CreatedAt = DateTime.Now
+                    CreatedAt = DateTimeOffset.UtcNow
                 });
 
             await _context.SaveChangesAsync();
