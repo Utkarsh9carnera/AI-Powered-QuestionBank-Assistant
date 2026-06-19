@@ -14,7 +14,7 @@ namespace QuestionBankAssistant.Services
             _apiKey = configuration["GroqApiKey"] ?? "";
         }
 
-        public async Task<string> AskAI(string prompt)
+        public async Task<string> AskAI(string question)
         {
             try
             {
@@ -24,6 +24,21 @@ namespace QuestionBankAssistant.Services
                     "Authorization",
                     $"Bearer {_apiKey}");
 
+                var enhancedPrompt = $@"
+Answer the following question in a clean and professional format.
+
+Rules:
+- Use short paragraphs.
+- Use headings when appropriate.
+- Use numbered points for lists.
+- Avoid markdown symbols like ** or ##.
+- Keep the answer readable and well structured.
+- Maximum 300 words.
+
+Question:
+{question}
+";
+
                 var requestBody = new
                 {
                     model = "llama-3.1-8b-instant",
@@ -32,21 +47,25 @@ namespace QuestionBankAssistant.Services
                         new
                         {
                             role = "user",
-                            content = prompt
+                            content = enhancedPrompt
                         }
-                    }
+                    },
+                    temperature = 0.7
                 };
 
-                var json = JsonConvert.SerializeObject(requestBody);
+                var json =
+                    JsonConvert.SerializeObject(requestBody);
 
-                var response = await _httpClient.PostAsync(
-                    "https://api.groq.com/openai/v1/chat/completions",
-                    new StringContent(
-                        json,
-                        Encoding.UTF8,
-                        "application/json"));
+                var response =
+                    await _httpClient.PostAsync(
+                        "https://api.groq.com/openai/v1/chat/completions",
+                        new StringContent(
+                            json,
+                            Encoding.UTF8,
+                            "application/json"));
 
-                var result = await response.Content.ReadAsStringAsync();
+                var result =
+                    await response.Content.ReadAsStringAsync();
 
                 Console.WriteLine("===== GROQ RESPONSE =====");
                 Console.WriteLine(result);
@@ -56,7 +75,8 @@ namespace QuestionBankAssistant.Services
                     return $"Groq API Error: {result}";
                 }
 
-                dynamic? data = JsonConvert.DeserializeObject(result);
+                dynamic? data =
+                    JsonConvert.DeserializeObject(result);
 
                 if (data == null)
                 {
@@ -68,7 +88,17 @@ namespace QuestionBankAssistant.Services
                     return $"Invalid Groq Response: {result}";
                 }
 
-                return data.choices[0].message.content.ToString();
+                string answer =
+                    data.choices[0].message.content.ToString();
+
+                // Cleanup formatting
+                answer = answer
+                    .Replace("**", "")
+                    .Replace("#", "")
+                    .Replace("•", "• ")
+                    .Trim();
+
+                return answer;
             }
             catch (Exception ex)
             {

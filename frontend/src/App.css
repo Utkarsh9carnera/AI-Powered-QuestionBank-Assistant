@@ -632,3 +632,11 @@ body{
   border-radius: 8px;
   cursor: pointer;
 }
+.answer-box {
+  text-align: left;
+}
+
+.answer-box div {
+  white-space: pre-wrap;
+  line-height: 1.9;
+}

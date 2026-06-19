@@ -11,42 +11,42 @@ function Dashboard() {
     "What is AWS?",
     "What is SQL?",
     "What is Machine Learning?",
-    "Who is Cristiano Ronaldo?"
+    "Who is Cristiano Ronaldo?",
   ];
 
   const handleSearch = async () => {
-  if (!query.trim()) return;
+    if (!query.trim()) return;
 
-  try {
-    const user = JSON.parse(
-      localStorage.getItem("user")
-    );
+    try {
+      const user = JSON.parse(
+        localStorage.getItem("user")
+      );
 
-    const response = await axios.get(
-      `https://ai-powered-questionbank-assistant.onrender.com/api/AIApi/ask?query=${encodeURIComponent(
-        query
-      )}&userEmail=${user?.email}`
-    );
+      const response = await axios.get(
+        `https://ai-powered-questionbank-assistant.onrender.com/api/AIApi/ask?query=${encodeURIComponent(
+          query
+        )}&userEmail=${user?.email}`
+      );
 
-    const cleanAnswer = response.data.answer
-      ?.replace(/\*\*/g, "")
-      ?.replace(/#{1,6}/g, "")
-      ?.replace(/-{2,}/g, "")
-      ?.replace(/\n{3,}/g, "\n\n");
+      const cleanAnswer = response.data.answer
+        ?.replace(/\*\*/g, "")
+        ?.replace(/#{1,6}/g, "")
+        ?.replace(/-{3,}/g, "")
+        ?.replace(/\n{3,}/g, "\n\n")
+        ?.trim();
 
-    setResult(cleanAnswer);
-    setSource(response.data.source);
-  } catch (error) {
-    console.error(error);
-    setResult("Error fetching answer");
-    setSource("");
-  }
-};
+      setResult(cleanAnswer);
+      setSource(response.data.source);
+    } catch (error) {
+      console.error(error);
+      setResult("Error fetching answer");
+      setSource("");
+    }
+  };
 
   return (
     <div className="dashboard">
       <div className="search-card">
-
         <h1>AI Question Bank Assistant</h1>
 
         <p className="subtitle">
@@ -57,7 +57,6 @@ function Dashboard() {
           <h3>How It Works</h3>
 
           <div className="steps">
-
             <div className="step">
               <span>➊</span>
               Add Questions
@@ -72,7 +71,6 @@ function Dashboard() {
               <span>➌</span>
               AI answers if no match is found
             </div>
-
           </div>
         </div>
 
@@ -93,12 +91,13 @@ function Dashboard() {
         </div>
 
         <div className="search-box">
-
           <input
             type="text"
             placeholder="Ask anything..."
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) =>
+              setQuery(e.target.value)
+            }
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 handleSearch();
@@ -109,12 +108,10 @@ function Dashboard() {
           <button onClick={handleSearch}>
             Search
           </button>
-
         </div>
 
         {result && (
           <div className="answer-box">
-
             <h2>Answer</h2>
 
             {source && (
@@ -123,11 +120,19 @@ function Dashboard() {
               </p>
             )}
 
-            <p>{result}</p>
-
+            <div
+              style={{
+                whiteSpace: "pre-wrap",
+                lineHeight: "1.9",
+                fontSize: "17px",
+                color: "#e5e7eb",
+                marginTop: "10px",
+              }}
+            >
+              {result}
+            </div>
           </div>
         )}
-
       </div>
     </div>
   );
