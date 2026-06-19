@@ -506,4 +506,91 @@ body{
         font-size:14px;
         padding:12px;
     }
+
+}
+.logout-btn{
+    background:#dc2626;
+    color:white;
+    border:none;
+    padding:8px 15px;
+    border-radius:8px;
+    cursor:pointer;
+}
+.user-info{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:white;
+    font-weight:600;
+}
+
+.profile-pic{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid #d946ef;
+}
+/* LOGIN PAGE */
+
+.login-page{
+    min-height:85vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.login-card{
+    width:500px;
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,.15);
+
+    border-radius:30px;
+
+    padding:40px;
+
+    text-align:center;
+
+    box-shadow:
+    0 20px 60px rgba(0,0,0,.4);
+}
+
+.login-icon{
+    font-size:70px;
+    margin-bottom:15px;
+}
+
+.login-card h1{
+    font-size:42px;
+    margin-bottom:10px;
+}
+
+.login-card p{
+    color:#d8e2ff;
+    margin-bottom:30px;
+}
+
+.login-features{
+    margin-top:30px;
+
+    display:grid;
+
+    gap:15px;
+
+    text-align:left;
+
+    background:rgba(255,255,255,.05);
+
+    padding:20px;
+
+    border-radius:18px;
+}
+
+.login-features div{
+    font-size:16px;
 }
