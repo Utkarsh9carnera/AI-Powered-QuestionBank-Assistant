@@ -171,9 +171,11 @@ function History() {
                   marginBottom: "12px",
                 }}
               >
-                {isExpanded
-                  ? item.answer
-                  : shortAnswer}
+                {(isExpanded
+  ? item.answer
+  : shortAnswer)
+  .replace(/\*\*/g, "")
+}
               </p>
 
               {/* Footer */}
