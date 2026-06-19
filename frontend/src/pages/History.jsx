@@ -115,6 +115,7 @@ function History() {
           }}
         >
           <h2>No searches found</h2>
+
           <p
             style={{
               color: "#cbd5e1",
@@ -189,31 +190,12 @@ function History() {
               <div
                 style={{
                   display: "flex",
-                  justifyContent:
-                    "space-between",
-                  alignItems: "center",
+                  justifyContent: "flex-end",
                   borderTop:
                     "1px solid rgba(255,255,255,0.08)",
                   paddingTop: "15px",
                 }}
               >
-                <span
-                  style={{
-                    color: "#9ca3af",
-                    fontSize: "14px",
-                  }}
-                >
-                  🕒{" "}
-                  {new Date(
-                    item.createdAt
-                  ).toLocaleString("en-IN", {
-                    timeZone:
-                      "Asia/Kolkata",
-                    dateStyle: "medium",
-                    timeStyle: "short",
-                  })}
-                </span>
-
                 <span
                   style={{
                     color: "#c084fc",
