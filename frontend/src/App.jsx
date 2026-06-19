@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import AddQuestion from "./pages/AddQuestion";
 import ViewQuestions from "./pages/ViewQuestions";
 import EditQuestion from "./pages/EditQuestion";
+import History from "./pages/History";
 import Login from "./pages/Login";
 
 import "./App.css";
@@ -39,6 +40,11 @@ function App() {
           <Link to="/view">
             View Questions
           </Link>
+          {user && (
+  <Link to="/history">
+    History
+  </Link>
+)}
 
           {user ? (
   <>
@@ -70,6 +76,10 @@ function App() {
         </nav>
 
         <Routes>
+          <Route
+  path="/history"
+  element={<History />}
+/>
 
           <Route
             path="/"

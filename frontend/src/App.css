@@ -594,3 +594,14 @@ body{
 .login-features div{
     font-size:16px;
 }
+.history-card {
+  background: #1c2460;
+  padding: 20px;
+  margin: 15px 0;
+  border-radius: 10px;
+  color: white;
+}
+
+.history-card h3 {
+  margin-bottom: 10px;
+}

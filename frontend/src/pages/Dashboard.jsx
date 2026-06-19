@@ -18,12 +18,13 @@ function Dashboard() {
     if (!query.trim()) return;
 
     try {
-      const response = await axios.get(
-        `https://ai-powered-questionbank-assistant.onrender.com/api/AIApi/ask?query=${encodeURIComponent(
-          query
-        )}`
-      );
+      const user = JSON.parse(
+  localStorage.getItem("user")
+);
 
+const response = await axios.get(
+  `https://ai-powered-questionbank-assistant.onrender.com/api/AIApi/ask?query=${encodeURIComponent(query)}&userEmail=${encodeURIComponent(user?.email || "guest")}`
+);
       const cleanAnswer = response.data.answer
         ?.replace(/\*\*/g, "")
         ?.replace(/#{1,6}/g, "")

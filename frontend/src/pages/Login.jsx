@@ -40,8 +40,6 @@ function Login() {
 
           <div>📚 Question Management</div>
 
-          <div>📄 PDF Upload Support</div>
-
           <div>🔐 Secure Google Login</div>
 
         </div>

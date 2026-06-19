@@ -29,33 +29,24 @@ namespace QuestionBankAssistant.Controllers
             if (string.IsNullOrWhiteSpace(query))
                 return View();
 
-            // ==========================
-            // STEP 1: Exact Match Search
-            // ==========================
             var searchText = query
-    .ToLower()
-    .Trim()
-    .Replace("?", "");
+                .ToLower()
+                .Trim()
+                .Replace("?", "");
 
-var exactMatch = _context.Questions
-    .AsEnumerable()
-    .FirstOrDefault(q =>
-        q.QuestionText
-            .ToLower()
-            .Replace("?", "")
-            .Contains(searchText));
-            Console.WriteLine($"Searching: {searchText}");
-Console.WriteLine($"Found: {exactMatch?.QuestionText}");
+            var exactMatch = _context.Questions
+                .AsEnumerable()
+                .FirstOrDefault(q =>
+                    q.QuestionText
+                        .ToLower()
+                        .Replace("?", "")
+                        .Contains(searchText));
 
             if (exactMatch != null)
             {
-                Console.WriteLine("Using Exact Match");
                 return View(exactMatch);
             }
 
-            // ==========================
-            // STEP 2: Vector Search
-            // ==========================
             try
             {
                 var queryVector =
@@ -73,9 +64,9 @@ Console.WriteLine($"Found: {exactMatch?.QuestionText}");
                     {
                         var storedVector =
                             emb.VectorData
-                            .Split(',')
-                            .Select(float.Parse)
-                            .ToList();
+                                .Split(',')
+                                .Select(float.Parse)
+                                .ToList();
 
                         var similarity =
                             _vectorSearch.CosineSimilarity(
@@ -88,34 +79,25 @@ Console.WriteLine($"Found: {exactMatch?.QuestionText}");
 
                             bestQuestion =
                                 _context.Questions
-                                .FirstOrDefault(q =>
-                                    q.QuestionId == emb.QuestionId);
+                                    .FirstOrDefault(q =>
+                                        q.QuestionId ==
+                                        emb.QuestionId);
                         }
                     }
                     catch
                     {
-                        // Skip bad vectors
                     }
                 }
 
-                Console.WriteLine($"Best Score = {bestScore}");
-                Console.WriteLine($"Best Question = {bestQuestion?.QuestionText}");
-
-                if (bestQuestion != null && bestScore > 0.80)
+                if (bestQuestion != null &&
+                    bestScore > 0.80)
                 {
-                    Console.WriteLine("Using Vector Search");
                     return View(bestQuestion);
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"Vector Search Error: {ex.Message}");
             }
-
-            // ==========================
-            // STEP 3: GROQ FALLBACK
-            // ==========================
-            Console.WriteLine("Using Groq");
 
             try
             {
@@ -135,157 +117,206 @@ Console.WriteLine($"Found: {exactMatch?.QuestionText}");
             catch (Exception ex)
             {
                 return Content(
-                    $"Groq Error: {ex.Message}"
-                );
+                    $"Groq Error: {ex.Message}");
             }
         }
 
-        public async Task<IActionResult> TestEmbedding()
+        [HttpPost]
+        [Route("api/ai/ask")]
+        public async Task<IActionResult> Ask(
+            [FromBody] AskRequest request)
         {
+            if (string.IsNullOrWhiteSpace(request.Question))
+                return BadRequest("Question is required");
+
+            string userEmail =
+                request.UserEmail ?? "guest";
+
+            // ======================
+            // Exact Match Search
+            // ======================
+
+            var exactMatch = _context.Questions
+                .FirstOrDefault(q =>
+                    q.QuestionText.ToLower()
+                    .Contains(
+                        request.Question.ToLower()));
+
+            if (exactMatch != null)
+            {
+                _context.SearchHistories.Add(
+                    new SearchHistory
+                    {
+                        UserEmail = userEmail,
+                        Question = request.Question,
+                        Answer = exactMatch.AnswerText,
+                        CreatedAt = DateTime.Now
+                    });
+
+                await _context.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    answer = exactMatch.AnswerText,
+                    source = "Database"
+                });
+            }
+
+            // ======================
+            // Vector Search
+            // ======================
+
             try
             {
-                var embedding =
-                    await _embeddingService.GenerateEmbedding(
-                        "What is React?"
-                    );
+                var queryVector =
+                    await _embeddingService
+                    .GenerateEmbedding(
+                        request.Question);
 
-                return Content(
-                    $"Vector Length: {embedding.Count}"
-                );
-            }
-            catch (Exception ex)
-            {
-                return Content(
-                    $"Embedding Error: {ex.Message}"
-                );
-            }
-        }
+                double bestScore = 0;
+                Question? bestQuestion = null;
 
-        public IActionResult TestDb()
-{
-    try
-    {
-        var questionCount =
-            _context.Questions.Count();
-
-        var embeddingCount =
-            _context.QuestionEmbeddings.Count();
-
-        return Content(
-            $"Questions: {questionCount} | Embeddings: {embeddingCount}"
-        );
-    }
-    catch (Exception ex)
-    {
-        return Content(
-            $"Error: {ex.Message}\n\n{ex.StackTrace}"
-        );
-    }
-}
-
-[HttpPost]
-[Route("api/ai/ask")]
-public async Task<IActionResult> Ask([FromBody] AskRequest request)
-{
-    if (string.IsNullOrWhiteSpace(request.Question))
-        return BadRequest("Question is required");
-
-    // Exact Match Search
-    var exactMatch = _context.Questions
-        .FirstOrDefault(q =>
-            q.QuestionText.ToLower()
-            .Contains(request.Question.ToLower()));
-
-    if (exactMatch != null)
-    {
-        return Ok(new
-        {
-            answer = exactMatch.AnswerText,
-            source = "Database"
-        });
-    }
-
-    // Vector Search
-    try
-    {
-        var queryVector =
-            await _embeddingService.GenerateEmbedding(
-                request.Question
-            );
-
-        double bestScore = 0;
-        Question? bestQuestion = null;
-
-        var embeddings =
-            _context.QuestionEmbeddings.ToList();
-
-        foreach (var emb in embeddings)
-        {
-            try
-            {
-                var storedVector =
-                    emb.VectorData
-                    .Split(',')
-                    .Select(float.Parse)
+                var embeddings =
+                    _context.QuestionEmbeddings
                     .ToList();
 
-                var similarity =
-                    _vectorSearch.CosineSimilarity(
-                        queryVector,
-                        storedVector
-                    );
-
-                if (similarity > bestScore)
+                foreach (var emb in embeddings)
                 {
-                    bestScore = similarity;
+                    try
+                    {
+                        var storedVector =
+                            emb.VectorData
+                            .Split(',')
+                            .Select(float.Parse)
+                            .ToList();
 
-                    bestQuestion =
-                        _context.Questions
-                        .FirstOrDefault(q =>
-                            q.QuestionId ==
-                            emb.QuestionId
-                        );
+                        var similarity =
+                            _vectorSearch
+                            .CosineSimilarity(
+                                queryVector,
+                                storedVector);
+
+                        if (similarity > bestScore)
+                        {
+                            bestScore = similarity;
+
+                            bestQuestion =
+                                _context.Questions
+                                .FirstOrDefault(q =>
+                                    q.QuestionId ==
+                                    emb.QuestionId);
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+
+                if (bestQuestion != null &&
+                    bestScore > 0.80)
+                {
+                    _context.SearchHistories.Add(
+                        new SearchHistory
+                        {
+                            UserEmail = userEmail,
+                            Question = request.Question,
+                            Answer = bestQuestion.AnswerText,
+                            CreatedAt = DateTime.Now
+                        });
+
+                    await _context.SaveChangesAsync();
+
+                    return Ok(new
+                    {
+                        answer = bestQuestion.AnswerText,
+                        source = "Vector Search"
+                    });
                 }
             }
             catch
             {
             }
-        }
 
-        if (bestQuestion != null &&
-            bestScore > 0.80)
-        {
-            return Ok(new
+            // ======================
+            // Groq Fallback
+            // ======================
+
+            try
             {
-                answer = bestQuestion.AnswerText,
-                source = "Vector Search"
-            });
+                var aiAnswer =
+                    await _groqService
+                    .AskAI(request.Question);
+
+                _context.SearchHistories.Add(
+                    new SearchHistory
+                    {
+                        UserEmail = userEmail,
+                        Question = request.Question,
+                        Answer = aiAnswer,
+                        CreatedAt = DateTime.Now
+                    });
+
+                await _context.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    answer = aiAnswer,
+                    source = "Groq AI"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    $"AI Error: {ex.Message}");
+            }
+        }
+
+        [HttpGet]
+        [Route("api/ai/testembedding")]
+        public async Task<IActionResult> TestEmbedding()
+        {
+            try
+            {
+                var embedding =
+                    await _embeddingService
+                    .GenerateEmbedding(
+                        "What is React?");
+
+                return Ok(new
+                {
+                    Length = embedding.Count
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    $"Embedding Error: {ex.Message}");
+            }
+        }
+
+        [HttpGet]
+        [Route("api/ai/testdb")]
+        public IActionResult TestDb()
+        {
+            try
+            {
+                var questionCount =
+                    _context.Questions.Count();
+
+                var embeddingCount =
+                    _context.QuestionEmbeddings.Count();
+
+                return Ok(new
+                {
+                    Questions = questionCount,
+                    Embeddings = embeddingCount
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(
+                    $"Error: {ex.Message}");
+            }
         }
     }
-    catch
-    {
-    }
-
-    // Groq Fallback
-    try
-    {
-        var aiAnswer =
-            await _groqService.AskAI(
-                request.Question
-            );
-
-        return Ok(new
-        {
-            answer = aiAnswer,
-            source = "Groq AI"
-        });
-    }
-    catch (Exception ex)
-    {
-        return BadRequest(
-            $"AI Error: {ex.Message}"
-        );
-    }
-}
-}
 }

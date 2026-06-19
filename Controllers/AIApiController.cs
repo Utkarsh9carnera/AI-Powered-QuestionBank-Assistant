@@ -27,7 +27,9 @@ public class AIApiController : ControllerBase
     }
 
     [HttpGet("ask")]
-    public async Task<IActionResult> Ask(string query)
+    public async Task<IActionResult> Ask(
+        string query,
+        string? userEmail = "guest")
     {
         if (string.IsNullOrWhiteSpace(query))
         {
@@ -45,6 +47,17 @@ public class AIApiController : ControllerBase
 
         if (exactMatch != null)
         {
+            _context.SearchHistories.Add(
+                new SearchHistory
+                {
+                    UserEmail = userEmail ?? "guest",
+                    Question = query,
+                    Answer = exactMatch.AnswerText,
+                    CreatedAt = DateTime.Now
+                });
+
+            await _context.SaveChangesAsync();
+
             return Ok(new
             {
                 source = "Question Bank",
@@ -91,7 +104,8 @@ public class AIApiController : ControllerBase
                         bestQuestion =
                             _context.Questions
                             .FirstOrDefault(q =>
-                                q.QuestionId == emb.QuestionId);
+                                q.QuestionId ==
+                                emb.QuestionId);
                     }
                 }
                 catch
@@ -99,8 +113,20 @@ public class AIApiController : ControllerBase
                 }
             }
 
-            if (bestQuestion != null && bestScore > 0.80)
+            if (bestQuestion != null &&
+                bestScore > 0.80)
             {
+                _context.SearchHistories.Add(
+                    new SearchHistory
+                    {
+                        UserEmail = userEmail ?? "guest",
+                        Question = query,
+                        Answer = bestQuestion.AnswerText,
+                        CreatedAt = DateTime.Now
+                    });
+
+                await _context.SaveChangesAsync();
+
                 return Ok(new
                 {
                     source = "Vector Search",
@@ -113,21 +139,56 @@ public class AIApiController : ControllerBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            Console.WriteLine(
+                $"Vector Search Error: {ex.Message}");
         }
 
         // =====================
         // STEP 3 - AI Fallback
         // =====================
 
-        var aiAnswer =
-            await _groqService.AskAI(query);
-
-        return Ok(new
+        try
         {
-            source = "Groq AI",
-            question = query,
-            answer = aiAnswer
-        });
+            var aiAnswer =
+                await _groqService.AskAI(query);
+
+            _context.SearchHistories.Add(
+                new SearchHistory
+                {
+                    UserEmail = userEmail ?? "guest",
+                    Question = query,
+                    Answer = aiAnswer,
+                    CreatedAt = DateTime.Now
+                });
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                source = "Groq AI",
+                question = query,
+                answer = aiAnswer
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(
+                $"AI Error: {ex.Message}");
+        }
+    }
+
+    [HttpGet("history")]
+    public IActionResult GetHistory(
+        string userEmail)
+    {
+        var history =
+            _context.SearchHistories
+            .Where(x =>
+                x.UserEmail == userEmail)
+            .OrderByDescending(x =>
+                x.CreatedAt)
+            .ToList();
+
+        return Ok(history);
     }
 }
