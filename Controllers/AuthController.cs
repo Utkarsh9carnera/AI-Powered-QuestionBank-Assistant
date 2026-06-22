@@ -32,10 +32,11 @@ namespace QuestionBankAssistant.Controllers
                             }
                         });
 
-               return Ok(new
+              return Ok(new
 {
-    message = "AuthController reached",
-    email = payload.Email
+    email = payload.Email,
+    name = payload.Name,
+    picture = payload.Picture
 });
             }
             catch

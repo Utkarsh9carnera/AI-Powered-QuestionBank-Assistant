@@ -49,16 +49,16 @@ function App() {
           {user ? (
   <>
     <div className="user-info">
-      <img
-        src={user.picture}
-        alt="Profile"
-        className="profile-pic"
-      />
+  <img
+    src={user.picture}
+    alt="Profile"
+    className="profile-pic"
+  />
 
-      <span>
-        {user.given_name}
-      </span>
-    </div>
+  <span>
+    {user.name}
+  </span>
+</div>
 
     <button
       onClick={logout}
