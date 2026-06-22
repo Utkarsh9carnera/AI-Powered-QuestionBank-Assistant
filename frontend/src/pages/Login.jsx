@@ -8,11 +8,11 @@ function Login() {
   const handleSuccess = async (response) => {
   try {
     const result = await axios.post(
-      "https://ai-powered-questionbank-assistant-1.onrender.com/api/auth/google-login",
-      {
-        idToken: response.credential,
-      }
-    );
+  "https://questionbank-backend-cve3.onrender.com/api/auth/google-login",
+  {
+    idToken: response.credential,
+  }
+);
 
     localStorage.setItem(
       "user",
