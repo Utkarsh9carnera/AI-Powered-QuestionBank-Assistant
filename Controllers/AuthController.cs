@@ -34,11 +34,8 @@ namespace QuestionBankAssistant.Controllers
 
                return Ok(new
 {
-    id = payload.Subject,
-    email = payload.Email,
-    name = payload.Name,
-    picture = payload.Picture,
-    given_name = payload.GivenName
+    message = "AuthController reached",
+    email = payload.Email
 });
             }
             catch
