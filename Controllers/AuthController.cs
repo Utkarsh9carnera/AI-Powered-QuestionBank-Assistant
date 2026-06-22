@@ -32,7 +32,7 @@ namespace QuestionBankAssistant.Controllers
                             }
                         });
 
-                return Ok(new
+               return Ok(new
 {
     id = payload.Subject,
     email = payload.Email,
