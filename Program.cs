@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using QuestionBankAssistant.data;
 using QuestionBankAssistant.Models;
 using QuestionBankAssistant.Services;
@@ -7,9 +8,23 @@ var builder = WebApplication.CreateBuilder(args);
 
 // MVC
 builder.Services.AddControllersWithViews();
+
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Question Bank Assistant API",
+        Version = "v1",
+        Description = "AI-powered Question Bank Assistant using RAG, ASP.NET Core, SQLite and Groq.",
+        Contact = new OpenApiContact
+        {
+            Name = "Utkarsh Krishna Tripathi"
+        }
+    });
+});
+
 // Database
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(
@@ -23,25 +38,23 @@ builder.Services.AddSingleton<VectorSearchService>();
 // React CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("ReactPolicy",
-        policy =>
-        {
-            policy.AllowAnyOrigin()
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
+    options.AddPolicy("ReactPolicy", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
 });
 
 var app = builder.Build();
 
-// Enable Swagger in all environments
+// Swagger (Enabled in all environments)
 app.UseSwagger();
-app.UseSwaggerUI();
-
-// Enable CORS
-app.UseCors("ReactPolicy");
-// Enable CORS
-app.UseCors("ReactPolicy");
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Question Bank Assistant API v1");
+    options.RoutePrefix = "swagger";
+});
 
 // Create database automatically
 using (var scope = app.Services.CreateScope())
@@ -58,14 +71,20 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
+
+// Enable CORS
+app.UseCors("ReactPolicy");
 
 app.UseAuthorization();
 
 // API Controllers
 app.MapControllers();
+
+// Seed sample data
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -108,6 +127,7 @@ using (var scope = app.Services.CreateScope())
         context.SaveChanges();
     }
 }
+
 // MVC Routes
 app.MapControllerRoute(
     name: "default",
