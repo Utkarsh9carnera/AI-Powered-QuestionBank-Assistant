@@ -7,7 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // MVC
 builder.Services.AddControllersWithViews();
-
+// Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 // Database
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(
@@ -32,6 +34,12 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Enable Swagger in all environments
+app.UseSwagger();
+app.UseSwaggerUI();
+
+// Enable CORS
+app.UseCors("ReactPolicy");
 // Enable CORS
 app.UseCors("ReactPolicy");
 
